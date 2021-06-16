@@ -14,6 +14,7 @@ import com.example.collapsingtoolbar.Adapter.PhotosAdapter;
 import com.example.collapsingtoolbar.Model.ImageModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.FetchImages;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,7 @@ public class AllPhotosFragment extends Fragment {
     ArrayList<ImageModel> arrayList;
     FetchImages fetchImages;
     Thread Task;
+
     public AllPhotosFragment() {}
 
     @Override

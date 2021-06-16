@@ -20,8 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:expandedTitleGravity="center"
+            app:layout_scrollInterpolator="@android:anim/accelerate_interpolator"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
-            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="Photos">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -70,7 +71,9 @@
             app:layout_constraintTop_toTopOf="@id/search" />
 
 
-        <FrameLayout
+
+
+        <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/frame"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -79,6 +82,8 @@
             app:layout_constraintStart_toStartOf="@id/per6"
             app:layout_constraintEnd_toEndOf="@id/per94"
             app:layout_constraintTop_toBottomOf="@id/options"/>
+
+
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -99,32 +104,5 @@
 
 
 
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="15dp"
-        android:backgroundTint="@color/grey"
-        app:cardCornerRadius="15dp" >
-
-        <me.ibrahimsn.lib.SmoothBottomBar
-            android:id="@+id/bottomBar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            app:backgroundColor="@color/bottomBarBack"
-            app:iconSize="20dp"
-            app:iconTint="@color/bottomBarIconTint"
-            app:iconTintActive="@color/white"
-            app:indicatorColor="@color/bottomBarIndicator"
-            app:indicatorRadius="8dp"
-            app:itemPadding="7dp"
-            app:menu="@menu/menu"
-            app:sideMargins="8dp"
-            app:textColor="@color/white"
-            app:textSize="12sp" />
-    </androidx.cardview.widget.CardView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -14,12 +14,12 @@ import com.example.collapsingtoolbar.Adapter.VideosAdapter;
 import com.example.collapsingtoolbar.Model.VideoModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.FetchVideos;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
 
 
 public class AllVideosFragment extends Fragment {
-
 
 
     RecyclerView recyclerView;
