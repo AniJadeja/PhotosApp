@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".Activities.MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/noActivityHeight"
+        android:theme="@style/MyStyle">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/colap_toolbar"
+            style="@style/MyStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:expandedTitleGravity="center"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+            app:title="Photos">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:layout_width="wrap_content"
+                android:layout_height="80dp" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:autofillHints="@string/app_name"
+            android:background="@drawable/search"
+            android:drawableEnd="@drawable/ic_search"
+            android:hint="@string/search_your_photos"
+            android:inputType="text"
+            android:paddingStart="15dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/hint"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@id/options"
+            app:layout_constraintStart_toStartOf="@id/per6"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/options"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/recyclerview_images"
+            android:src="@drawable/ic_options"
+            app:layout_constraintBottom_toBottomOf="@id/search"
+            app:layout_constraintEnd_toEndOf="@id/per94"
+            app:layout_constraintStart_toEndOf="@id/search"
+            app:layout_constraintTop_toTopOf="@id/search" />
+
+
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/per6"
+            app:layout_constraintEnd_toEndOf="@id/per94"
+            app:layout_constraintTop_toBottomOf="@id/options"/>
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/per6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.04" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/per94"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.96" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="15dp"
+        android:backgroundTint="@color/grey"
+        app:cardCornerRadius="15dp" >
+
+        <me.ibrahimsn.lib.SmoothBottomBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:backgroundColor="@color/bottomBarBack"
+            app:iconSize="20dp"
+            app:iconTint="@color/bottomBarIconTint"
+            app:iconTintActive="@color/white"
+            app:indicatorColor="@color/bottomBarIndicator"
+            app:indicatorRadius="8dp"
+            app:itemPadding="7dp"
+            app:menu="@menu/menu"
+            app:sideMargins="8dp"
+            app:textColor="@color/white"
+            app:textSize="12sp" />
+    </androidx.cardview.widget.CardView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
