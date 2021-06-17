@@ -24,11 +24,12 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
     Context context;
     ArrayList<VideoModel> arrayList;
     Activity activity;
-
-    public VideosAdapter(Context context, ArrayList<VideoModel> arrayList, Activity activity) {
+    OnVideoClickListner listner;
+    public VideosAdapter(Context context, ArrayList<VideoModel> arrayList, Activity activity,OnVideoClickListner listner) {
         this.context = context;
         this.arrayList = arrayList;
         this.activity = activity;
+        this.listner = listner;
     }
 
     @NonNull
@@ -36,7 +37,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_video, parent, false);
-        return new MyViewHolder(view);
+        return new MyViewHolder(view,listner);
     }
 
     @Override
@@ -54,13 +55,24 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
         return arrayList.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView video;
-
-        public MyViewHolder(@NonNull View itemView) {
+        OnVideoClickListner listner;
+        public MyViewHolder(@NonNull View itemView,OnVideoClickListner listner) {
             super(itemView);
+            this.listner = listner;
+            itemView.setOnClickListener(this);
             video = itemView.findViewById(R.id.video);
         }
+
+        @Override
+        public void onClick(View v) {
+            listner.onClick(getAdapterPosition());
+        }
+    }
+
+    public interface  OnVideoClickListner{
+         void onClick(int position);
     }
 }

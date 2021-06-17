@@ -26,14 +26,22 @@ public class VideoPlay extends AppCompatActivity {
         setContentView(R.layout.activity_video_play);
 
 
-        String s = getIntent().getStringExtra("uri");
+        String s = getIntent().getStringExtra("Uri");
         Log.d(TAG, "onCreate: Got Uri , "+s);
 
         thumbnail = findViewById(R.id.thumbnail);
 
-        GlideApp.with(getApplicationContext())
-                .load(Uri.parse(s))
-                .into(thumbnail);
+        try {
+            GlideApp.with(getApplicationContext())
+                    .load(Uri.parse(s))
+                    .into(thumbnail);
+        }
+        catch (NullPointerException e)
+        {
+            Log.d(TAG, "onCreate: setting url got nullpointer exception..");
+        }
+        
+       
 
         videoView = findViewById(R.id.video);
         videoView.setVideoURI(Uri.parse(s));

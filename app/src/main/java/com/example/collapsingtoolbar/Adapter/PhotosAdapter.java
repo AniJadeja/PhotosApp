@@ -25,11 +25,12 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     Context context;
     ArrayList<ImageModel> arrayList;
     Activity activity;
-
-    public PhotosAdapter(Context context, ArrayList<ImageModel> arrayList, Activity activity) {
+    OnImageClickListner listner;
+    public PhotosAdapter(Context context, ArrayList<ImageModel> arrayList, Activity activity, OnImageClickListner listner) {
         this.context = context;
         this.arrayList = arrayList;
         this.activity = activity;
+        this.listner = listner;
     }
 
     @NonNull
@@ -37,7 +38,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view, parent, false);
-        return new MyViewHolder(view);
+        return new MyViewHolder(view,listner);
     }
 
     @Override
@@ -54,17 +55,26 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
         return arrayList.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView img;
-
-        public MyViewHolder(@NonNull View itemView) {
+        OnImageClickListner listner;
+        public MyViewHolder(@NonNull View itemView, OnImageClickListner listner) {
             super(itemView);
+            this.listner = listner;
+            itemView.setOnClickListener(this);
             img = itemView.findViewById(R.id.img);
+        }
+
+        @Override
+        public void onClick(View v) {
+            listner.onclick(getAdapterPosition());
         }
     }
 
     public  interface  OnImageClickListner{
-        public void onclick(int position);
+         void onclick(int position);
     }
+
+
 }

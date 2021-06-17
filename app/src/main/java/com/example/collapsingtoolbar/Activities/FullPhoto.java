@@ -17,7 +17,6 @@ import java.util.ArrayList;
 public class FullPhoto extends AppCompatActivity {
 
     String TAG = "NewActivity";
-    ArrayList<ImageModel> arrayList;
     ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

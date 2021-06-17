@@ -1,25 +1,30 @@
 package com.example.collapsingtoolbar.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.collapsingtoolbar.Activities.FullPhoto;
 import com.example.collapsingtoolbar.Adapter.PhotosAdapter;
 import com.example.collapsingtoolbar.Model.ImageModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.FetchImages;
+import com.example.collapsingtoolbar.utils.FetchVideos;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
-public class AllPhotosFragment extends Fragment {
+public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImageClickListner {
 
 
     RecyclerView recyclerView;
@@ -27,7 +32,7 @@ public class AllPhotosFragment extends Fragment {
     ArrayList<ImageModel> arrayList;
     FetchImages fetchImages;
     Thread Task;
-
+    String TAG ="AllPhotosFragment";
     public AllPhotosFragment() {}
 
     @Override
@@ -67,7 +72,15 @@ public class AllPhotosFragment extends Fragment {
     }
 
     void init() {
-        recyclerView = getView().findViewById(R.id.recyclerview);
+
+        try {
+            recyclerView = requireView().findViewById(R.id.recyclerview);
+        }
+        catch (NullPointerException e)
+        {
+            Log.d(TAG, "init: NullPointerException");
+        }
+
         layoutManager = new GridLayoutManager(getActivity(), 4);
         arrayList = new ArrayList<>();
         fetchImages = new FetchImages(getActivity());
@@ -78,17 +91,21 @@ public class AllPhotosFragment extends Fragment {
 
     private void fetchImages() {
         arrayList = fetchImages.fetchImages();
-        new Thread(() -> {
-            getActivity().runOnUiThread(() -> {
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setHasFixedSize(true);
-                PhotosAdapter adapter = new PhotosAdapter(getActivity().getApplicationContext(), arrayList, getActivity());
-                recyclerView.setAdapter(adapter);
-                Log.d("FetchImages(): ", " RecyclerView Adapter attached");
-            });
-        }
+        new Thread(() -> requireActivity().runOnUiThread(() -> {
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setHasFixedSize(true);
+            PhotosAdapter adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(),this);
+            recyclerView.setAdapter(adapter);
+            Log.d("FetchImages(): ", " RecyclerView Adapter attached");
+        })
         ).start();
     }
 
 
+    @Override
+    public void onclick(int position) {
+        Intent intent = new Intent(getActivity(), FullPhoto.class);
+        intent.putExtra("uri",arrayList.get(position).getUri().toString());
+        startActivity(intent);
+    }
 }

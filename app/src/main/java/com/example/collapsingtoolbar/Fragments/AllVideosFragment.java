@@ -1,6 +1,7 @@
 package com.example.collapsingtoolbar.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.collapsingtoolbar.Activities.FullPhoto;
+import com.example.collapsingtoolbar.Activities.VideoPlay;
 import com.example.collapsingtoolbar.Adapter.VideosAdapter;
 import com.example.collapsingtoolbar.Model.VideoModel;
 import com.example.collapsingtoolbar.R;
@@ -20,9 +23,10 @@ import com.example.collapsingtoolbar.utils.FetchVideos;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
-public class AllVideosFragment extends Fragment {
+public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideoClickListner {
 
 
     RecyclerView recyclerView;
@@ -78,7 +82,7 @@ public class AllVideosFragment extends Fragment {
     }
 
     void init() {
-        recyclerView = getView().findViewById(R.id.recyclerview);
+        recyclerView = requireView().findViewById(R.id.recyclerview);
         layoutManager = new GridLayoutManager(getActivity(), 4);
         arrayList = new ArrayList<>();
         fetchVideos = new FetchVideos(getActivity());
@@ -88,13 +92,20 @@ public class AllVideosFragment extends Fragment {
 
     private void fetchImages() {
         arrayList = fetchVideos.fetchVideos();
-        new Thread(() -> getActivity().runOnUiThread(() -> {
+        new Thread(() -> requireActivity().runOnUiThread(() -> {
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            VideosAdapter adapter = new VideosAdapter(getActivity().getApplicationContext(), arrayList, getActivity());
+            VideosAdapter adapter = new VideosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(),this);
             recyclerView.setAdapter(adapter);
             Log.d("FetchImages(): ", " RecyclerView Adapter attached");
         })
         ).start();
+    }
+
+    @Override
+    public void onClick(int position) {
+        Intent intent = new Intent(getActivity(),VideoPlay.class);
+        intent.putExtra("Uri",arrayList.get(position).getUri().toString());
+        startActivity(intent);
     }
 }
