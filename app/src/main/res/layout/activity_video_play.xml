@@ -14,7 +14,20 @@
         android:layout_height="match_parent"
         android:visibility="visible"
         android:onClick="videoPlay"
+        android:contentDescription="@string/videothumbnail"
         />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_videos"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/videoicon"
+        />
+
+
 
     <VideoView
         android:id="@+id/video"

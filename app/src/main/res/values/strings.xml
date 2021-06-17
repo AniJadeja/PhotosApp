@@ -2,5 +2,7 @@
     <string name="app_name">Photos</string>
     <string name="search_your_photos">Search Your Photos …</string>
     <string name="recyclerview_images">RecyclerView Images</string>
+    <string name="videothumbnail">VideoThumbnail</string>
+    <string name="videoicon">VideoIcon</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
