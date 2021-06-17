@@ -22,7 +22,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import me.ibrahimsn.lib.SmoothBottomBar;
 
-public class MainActivity extends AppCompatActivity implements ComponentCallbacks2 {
+public class MainActivity extends AppCompatActivity {
 
     CollapsingToolbarLayout collapsingToolbar;
     EditText search;

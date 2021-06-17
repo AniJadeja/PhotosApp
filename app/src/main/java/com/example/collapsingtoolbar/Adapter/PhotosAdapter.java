@@ -43,7 +43,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         GlideApp.with(context)
-                //.load("file://" + arrayList.get(position).getUri())
                 .load(arrayList.get(position).getUri())
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .into(holder.img);
@@ -63,5 +62,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
             super(itemView);
             img = itemView.findViewById(R.id.img);
         }
+    }
+
+    public  interface  OnImageClickListner{
+        public void onclick(int position);
     }
 }

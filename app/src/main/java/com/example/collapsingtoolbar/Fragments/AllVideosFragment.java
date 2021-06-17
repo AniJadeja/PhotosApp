@@ -1,11 +1,14 @@
 package com.example.collapsingtoolbar.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,10 +31,14 @@ public class AllVideosFragment extends Fragment {
     FetchVideos fetchVideos;
     Thread Task;
 
+    String TAG = "AllVideosFragment";
+
+
     public AllVideosFragment() {}
 
     @Override
     public void onStart() {
+        Log.d(TAG, "onStart: called...");
         super.onStart();
         Task = new Thread(this::init);
         Task.start();
@@ -44,6 +51,7 @@ public class AllVideosFragment extends Fragment {
 
     @Override
     public void onResume() {
+        Log.d(TAG, "onResume: callled...");
         super.onResume();
         Task = new Thread(this::fetchImages);
         Task.start();
@@ -53,6 +61,15 @@ public class AllVideosFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        fetchVideos.setFETCHED(false);
+        Log.d(TAG, "onStop: called...");
+        Log.d(TAG, "onStop: setFetched(false)");
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,20 +86,15 @@ public class AllVideosFragment extends Fragment {
 
 
 
-
     private void fetchImages() {
         arrayList = fetchVideos.fetchVideos();
-        new Thread(() -> {
-            getActivity().runOnUiThread(() -> {
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setHasFixedSize(true);
-                VideosAdapter adapter = new VideosAdapter(getActivity().getApplicationContext(), arrayList, getActivity());
-                recyclerView.setAdapter(adapter);
-                Log.d("FetchImages(): ", " RecyclerView Adapter attached");
-            });
-        }
+        new Thread(() -> getActivity().runOnUiThread(() -> {
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setHasFixedSize(true);
+            VideosAdapter adapter = new VideosAdapter(getActivity().getApplicationContext(), arrayList, getActivity());
+            recyclerView.setAdapter(adapter);
+            Log.d("FetchImages(): ", " RecyclerView Adapter attached");
+        })
         ).start();
     }
-
-
 }
