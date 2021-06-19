@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.collapsingtoolbar.Model.VideoModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.GlideApp;
@@ -42,12 +43,16 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        GlideApp.with(context)
-                //.load("file://" + arrayList.get(position).getUri())
-                .load(arrayList.get(position).getUri())
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .into(holder.video);
-        Log.d("FetchVideos(): "," Glide Called");
+        activity.runOnUiThread(() -> {
+            GlideApp.with(context)
+                    .load(arrayList.get(position).getUri())
+                    .apply(RequestOptions.overrideOf(180,180))
+                    .apply(RequestOptions.centerCropTransform())
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .into(holder.video);
+            Log.d("FetchVideos(): "," Glide Called");
+        });
+
     }
 
     @Override

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.collapsingtoolbar.Adapter.FragmentAdapter;
@@ -19,6 +20,8 @@ import com.example.collapsingtoolbar.Fragments.AllPhotosFragment;
 import com.example.collapsingtoolbar.Fragments.AllVideosFragment;
 import com.example.collapsingtoolbar.R;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+
+import java.lang.reflect.Field;
 
 import me.ibrahimsn.lib.SmoothBottomBar;
 
@@ -63,6 +66,22 @@ public class MainActivity extends AppCompatActivity {
                 {collapsingToolbar.setTitle("Videos");}
             }
         });
+
+
+
+        try {
+            final Field recyclerViewField = ViewPager2.class.getDeclaredField("mRecyclerView");
+            recyclerViewField.setAccessible(true);
+
+            final RecyclerView recyclerView = (RecyclerView) recyclerViewField.get(pager2);
+
+            final Field touchSlopField = RecyclerView.class.getDeclaredField("mTouchSlop");
+            touchSlopField.setAccessible(true);
+
+            final int touchSlop = (int) touchSlopField.get(recyclerView);
+            touchSlopField.set(recyclerView, touchSlop * 4);//6 is empirical value
+        } catch (Exception ignore) {
+        }
 
     }
 }

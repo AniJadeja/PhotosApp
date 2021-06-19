@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,11 +16,8 @@ import com.example.collapsingtoolbar.Adapter.PhotosAdapter;
 import com.example.collapsingtoolbar.Model.ImageModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.FetchImages;
-import com.example.collapsingtoolbar.utils.FetchVideos;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 
 public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImageClickListner {
@@ -72,15 +68,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     }
 
     void init() {
-
-        try {
-            recyclerView = requireView().findViewById(R.id.recyclerview);
-        }
-        catch (NullPointerException e)
-        {
-            Log.d(TAG, "init: NullPointerException");
-        }
-
+        recyclerView = requireView().findViewById(R.id.recyclerview);
         layoutManager = new GridLayoutManager(getActivity(), 4);
         arrayList = new ArrayList<>();
         fetchImages = new FetchImages(getActivity());
