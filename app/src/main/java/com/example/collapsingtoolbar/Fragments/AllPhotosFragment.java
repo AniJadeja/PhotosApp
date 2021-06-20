@@ -2,6 +2,7 @@ package com.example.collapsingtoolbar.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.example.collapsingtoolbar.Activities.FullPhoto;
 import com.example.collapsingtoolbar.Adapter.PhotosAdapter;
 import com.example.collapsingtoolbar.Model.ImageModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.FetchImages;
+import com.example.collapsingtoolbar.utils.CustomRecyclerView;
 
 import java.util.ArrayList;
 
@@ -23,14 +26,15 @@ import java.util.ArrayList;
 public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImageClickListner {
 
 
-    RecyclerView recyclerView;
+    CustomRecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     ArrayList<ImageModel> arrayList;
     FetchImages fetchImages;
     Thread Task;
     String TAG ="AllPhotosFragment";
     public AllPhotosFragment() {}
-
+    Parcelable State;
+    PhotosAdapter adapter;
     @Override
     public void onStart() {
         super.onStart();
@@ -75,15 +79,21 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     }
 
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        State = layoutManager.onSaveInstanceState(); // Save RecyclerView State
+    }
 
     private void fetchImages() {
+
         arrayList = fetchImages.fetchImages();
         new Thread(() -> requireActivity().runOnUiThread(() -> {
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            PhotosAdapter adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(),this);
+            adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(),this);
             recyclerView.setAdapter(adapter);
+            layoutManager.onRestoreInstanceState(State); // Restore State
             Log.d("FetchImages(): ", " RecyclerView Adapter attached");
         })
         ).start();

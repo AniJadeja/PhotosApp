@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.example.collapsingtoolbar.Activities.VideoPlay;
 import com.example.collapsingtoolbar.Adapter.VideosAdapter;
 import com.example.collapsingtoolbar.Model.VideoModel;
 import com.example.collapsingtoolbar.R;
+import com.example.collapsingtoolbar.utils.CustomRecyclerView;
 import com.example.collapsingtoolbar.utils.FetchVideos;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -29,12 +31,12 @@ import java.util.Objects;
 public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideoClickListner {
 
 
-    RecyclerView recyclerView;
+    CustomRecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     ArrayList<VideoModel> arrayList;
     FetchVideos fetchVideos;
     Thread Task;
-
+    Parcelable State;
     String TAG = "AllVideosFragment";
 
 
@@ -64,6 +66,12 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        State = layoutManager.onSaveInstanceState(); // Save RecyclerView State
     }
 
     @Override
@@ -97,6 +105,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
             recyclerView.setHasFixedSize(true);
             VideosAdapter adapter = new VideosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(),this);
             recyclerView.setAdapter(adapter);
+            layoutManager.onRestoreInstanceState(State); //Restore state
             Log.d("FetchImages(): ", " RecyclerView Adapter attached");
         })
         ).start();
@@ -104,8 +113,14 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
 
     @Override
     public void onClick(int position) {
-        Intent intent = new Intent(getActivity(),VideoPlay.class);
-        intent.putExtra("Uri",arrayList.get(position).getUri().toString());
-        startActivity(intent);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(getActivity(),VideoPlay.class);
+                intent.putExtra("Uri",arrayList.get(position).getUri().toString());
+                startActivity(intent);
+            }
+        });
+
     }
 }

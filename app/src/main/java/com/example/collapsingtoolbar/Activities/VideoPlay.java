@@ -20,6 +20,7 @@ public class VideoPlay extends AppCompatActivity {
     Boolean VIDEO_PLAYING = false;
     MediaController mediaController;
     ImageView thumbnail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,22 +28,12 @@ public class VideoPlay extends AppCompatActivity {
 
 
         String s = getIntent().getStringExtra("Uri");
-        Log.d(TAG, "onCreate: Got Uri , "+s);
+        Log.d(TAG, "onCreate: Got Uri , " + s);
 
         thumbnail = findViewById(R.id.thumbnail);
-
-        try {
-            GlideApp.with(getApplicationContext())
-                    .load(Uri.parse(s))
-                    .into(thumbnail);
-        }
-        catch (NullPointerException e)
-        {
-            Log.d(TAG, "onCreate: setting url got nullpointer exception..");
-        }
-        
-       
-
+        GlideApp.with(getApplicationContext())
+                .load(Uri.parse(s))
+                .into(thumbnail);
         videoView = findViewById(R.id.video);
         videoView.setVideoURI(Uri.parse(s));
 
@@ -51,8 +42,7 @@ public class VideoPlay extends AppCompatActivity {
 
     }
 
-    public  void videoPlay(View view)
-    {
+    public void videoPlay(View view) {
         thumbnail.setVisibility(View.GONE);
         videoView.setVisibility(View.VISIBLE);
         videoView.setMediaController(mediaController);
