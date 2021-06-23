@@ -5,12 +5,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="red">#FFa51e22</color>
+    <color name="red">#F44336</color>
     <color name="grey">#202020</color>
     <color name="hint">#B3B3B3</color>
-    <color name="bottomBarBack">#181818</color>
-    <color name="bottomBarIndicator">#262929</color>
-    <color name="bottomBarIconTint">#B1B1B1</color>
-
-
 </resources>

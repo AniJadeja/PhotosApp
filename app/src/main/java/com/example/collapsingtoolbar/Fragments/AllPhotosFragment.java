@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -31,7 +32,10 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     ArrayList<ImageModel> arrayList;
     FetchImages fetchImages;
     Thread Task;
+
     String TAG ="AllPhotosFragment";
+
+
     public AllPhotosFragment() {}
     Parcelable State;
     PhotosAdapter adapter;
@@ -92,6 +96,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(),this);
+            Log.d("getItemCount"," "+adapter.getItemCount());
             recyclerView.setAdapter(adapter);
             layoutManager.onRestoreInstanceState(State); // Restore State
             Log.d("FetchImages(): ", " RecyclerView Adapter attached");

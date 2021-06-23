@@ -19,16 +19,36 @@
             style="@style/MyStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:expandedTitleGravity="center"
-            app:layout_scrollInterpolator="@android:anim/accelerate_interpolator"
+            app:expandedTitleGravity="center_vertical"
+            app:expandedTitleMarginTop="120dp"
+            app:expandedTitleMarginStart="35dp"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:title="Photos">
+            app:title="All Photos" >
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:layout_width="wrap_content"
-                android:layout_height="80dp" />
+                android:layout_height="60dp"
+                android:paddingStart="30dp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Photos"
+                android:textColor="@color/white"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="0dp"
+                android:textSize="40dp"
+                android:layout_marginStart="35dp"/>
+
+            <ImageView
+                android:layout_width="90dp"
+                android:layout_height="2dp"
+                android:src="@drawable/white_bar"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="20dp"
+                />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -39,6 +59,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_marginStart="15dp"
+            android:textColor="@color/hint"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@id/per6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
         <EditText
             android:id="@+id/search"
             android:layout_width="0dp"
@@ -53,9 +84,10 @@
             android:textColor="@color/white"
             android:textColorHint="@color/hint"
             android:textSize="12sp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toStartOf="@id/options"
             app:layout_constraintStart_toStartOf="@id/per6"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/count" />
 
         <ImageView
             android:id="@+id/options"

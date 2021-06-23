@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="noActivityHeight" type="dimen">350dp</dimen>
+    <dimen name="noActivityHeight" type="dimen">300dp</dimen>
 </resources>

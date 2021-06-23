@@ -27,7 +27,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
     ArrayList<VideoModel> arrayList;
     Activity activity;
     OnVideoClickListner listner;
-
+    TextView view;
     public VideosAdapter(Context context, ArrayList<VideoModel> arrayList, Activity activity, OnVideoClickListner listner) {
         this.context = context;
         this.arrayList = arrayList;
@@ -69,11 +69,12 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
                     .into(holder.video);
             Log.d("FetchVideos(): ", " Glide Called");
         });
-
     }
 
     @Override
     public int getItemCount() {
+        view = activity.findViewById(R.id.count);
+        view.setText(arrayList.size()+" Videos");
         return arrayList.size();
     }
 
@@ -89,6 +90,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
             itemView.setOnClickListener(this);
             video = itemView.findViewById(R.id.video);
             time = itemView.findViewById(R.id.timeView);
+
         }
 
         @Override

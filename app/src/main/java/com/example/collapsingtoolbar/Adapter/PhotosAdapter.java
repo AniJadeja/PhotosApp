@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.collapsingtoolbar.Activities.MainActivity;
 import com.example.collapsingtoolbar.Model.ImageModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.GlideApp;
@@ -27,11 +29,18 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     ArrayList<ImageModel> arrayList;
     Activity activity;
     OnImageClickListner listner;
+    MainActivity mactivity;
+    NumberCallback callback;
+    TextView view;
+    public PhotosAdapter ()
+    {}
+
     public PhotosAdapter(Context context, ArrayList<ImageModel> arrayList, Activity activity, OnImageClickListner listner) {
         this.context = context;
         this.arrayList = arrayList;
         this.activity = activity;
         this.listner = listner;
+        mactivity = new MainActivity();
     }
 
     @NonNull
@@ -53,10 +62,13 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
             Log.d("FetchImages(): "," Glide Called");
         });
 
+
     }
 
     @Override
     public int getItemCount() {
+        view = activity.findViewById(R.id.count);
+        view.setText(arrayList.size()+" Photos");
         return arrayList.size();
     }
 
@@ -69,6 +81,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
             this.listner = listner;
             itemView.setOnClickListener(this);
             img = itemView.findViewById(R.id.img);
+
         }
 
         @Override
@@ -79,6 +92,13 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
 
     public  interface  OnImageClickListner{
          void onclick(int position);
+    }
+
+    public void setCallback(NumberCallback callback){this.callback = callback;}
+
+    public interface NumberCallback
+    {
+        void number(int num);
     }
 
 

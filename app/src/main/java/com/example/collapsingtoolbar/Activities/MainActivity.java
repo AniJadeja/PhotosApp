@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.ComponentCallbacks2;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
@@ -16,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.collapsingtoolbar.Adapter.FragmentAdapter;
+import com.example.collapsingtoolbar.Adapter.PhotosAdapter;
+import com.example.collapsingtoolbar.Adapter.VideosAdapter;
 import com.example.collapsingtoolbar.Fragments.AllPhotosFragment;
 import com.example.collapsingtoolbar.Fragments.AllVideosFragment;
 import com.example.collapsingtoolbar.R;
@@ -25,13 +30,17 @@ import java.lang.reflect.Field;
 
 import me.ibrahimsn.lib.SmoothBottomBar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PhotosAdapter.NumberCallback{
 
     CollapsingToolbarLayout collapsingToolbar;
     EditText search;
     Thread Task;
     ViewPager2 pager2;
     FragmentAdapter adapter;
+    PhotosAdapter photosAdapter;
+    TextView Imagecount;
+    public int photos;
+    AllPhotosFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +65,23 @@ public class MainActivity extends AppCompatActivity {
         search = findViewById(R.id.search);
         pager2 = findViewById(R.id.frame);
         adapter = new FragmentAdapter(getSupportFragmentManager(),getLifecycle());
+        Imagecount = findViewById(R.id.count);
+        fragment = new AllPhotosFragment();
+        photosAdapter = new PhotosAdapter();
+        photosAdapter.setCallback(this);
+
 
         pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 if (pager2.getCurrentItem() == 0)
-                {collapsingToolbar.setTitle("Photos");}
+                {
+                    collapsingToolbar.setTitle("All Photos");
+                    Log.d("Fetched Value", "onPageSelected: "+photos);
+                }
                 else if (pager2.getCurrentItem() == 1)
-                {collapsingToolbar.setTitle("Videos");}
+                {collapsingToolbar.setTitle("All Videos");
+                }
             }
         });
 
@@ -83,5 +101,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception ignore) {
         }
 
+    }
+
+    @Override
+    public void number(int num) {
+       // Imagecount.setText(num+" Photos");
     }
 }
