@@ -40,7 +40,8 @@ public class FetchVideos {
         if(!FETCHED || !previousList.equals(arrayList)) {
             Log.d("FetchVideos()", "fetchVideos: Initiated... ");
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-            projection = new String[]{MediaStore.Video.Media._ID};
+            projection = new String[]{MediaStore.Video.Media._ID,
+            MediaStore.Video.Media.DURATION};
             orderBy = MediaStore.Video.Media.DEFAULT_SORT_ORDER;
             cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
             column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
@@ -49,8 +50,10 @@ public class FetchVideos {
                 while (cursor.moveToNext()) {
                     Log.d("FetchVideos(): ", " Started");
                     long mediaId = cursor.getLong(column_index_data);
+                    long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
                     Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
                     VideoModel videoModel = new VideoModel();
+                    videoModel.setDuration(duration);
                     videoModel.setUri(uriMedia);
                     arrayList.add(videoModel);
                 }

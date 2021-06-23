@@ -16,6 +16,7 @@ public class FetchImages {
     Activity activity;
     private static ArrayList<ImageModel> arrayList;
     private static ArrayList<ImageModel> previousList;
+    private static ArrayList<String> list;
 
     private static Uri uri = null;
     private static Cursor cursor;
@@ -24,11 +25,13 @@ public class FetchImages {
     private static String orderBy = null;
     private static Boolean FETCHED = false;
 
+    String name;
 
     public FetchImages(Activity activity) {
         this.activity = activity;
         arrayList = new ArrayList<>();
         previousList = new ArrayList<>();
+        list= new ArrayList<>();
     }
 
 
@@ -36,8 +39,8 @@ public class FetchImages {
 
         if(!FETCHED || !previousList.equals(arrayList)) {
             uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-            projection = new String[]{MediaStore.Images.Media._ID};
-            orderBy = MediaStore.Images.Media.DEFAULT_SORT_ORDER;
+            projection = new String[]{MediaStore.Images.Media._ID,MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+            orderBy = MediaStore.Images.Media.DATE_ADDED;
             cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
             column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
 
@@ -45,13 +48,24 @@ public class FetchImages {
                 while (cursor.moveToNext()) {
                     Log.d("FetchImages(): ", " Started");
                     long mediaId = cursor.getLong(column_index_data);
+                    name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+
+                    if (!list.contains(name))
+                        list.add(name);
+
                     Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
                     ImageModel imageModel = new ImageModel();
                     imageModel.setUri(uriMedia);
                     arrayList.add(imageModel);
                 }
                 cursor.close();
+
                 Log.d("FetchImages(): ", " Ended");
+                Log.d("FetchAlbums(): ", " Ended with list size "+list.size());
+                for (int i = 0; i<list.size();i++)
+                {
+                    Log.d("FetchAlbums(): ", " element " +i+":"+list.get(i));
+                }
 
             }).start();
             FETCHED = true;

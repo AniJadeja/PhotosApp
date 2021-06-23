@@ -4,6 +4,15 @@ import android.net.Uri;
 
 public class VideoModel {
     Uri uri;
+    long Duration;
+
+    public long getDuration() {
+        return Duration;
+    }
+
+    public void setDuration(long duration) {
+        Duration = duration;
+    }
 
     public Uri getUri() {
         return uri;

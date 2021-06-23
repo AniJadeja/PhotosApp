@@ -91,7 +91,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
 
     void init() {
         recyclerView = requireView().findViewById(R.id.recyclerview);
-        layoutManager = new GridLayoutManager(getActivity(), 4);
+        layoutManager = new GridLayoutManager(getActivity(), 3);
         arrayList = new ArrayList<>();
         fetchVideos = new FetchVideos(getActivity());
     }
