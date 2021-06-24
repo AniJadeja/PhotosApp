@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.collapsingtoolbar.Fragments.AlbumsFragment;
 import com.example.collapsingtoolbar.Fragments.AllPhotosFragment;
 import com.example.collapsingtoolbar.Fragments.AllVideosFragment;
 
@@ -26,6 +27,7 @@ public class FragmentAdapter extends FragmentStateAdapter {
         switch (position)
         {
             case 1: return videosFragment;
+            case 2: return new AlbumsFragment();
 
         }
 
@@ -34,6 +36,6 @@ public class FragmentAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 }

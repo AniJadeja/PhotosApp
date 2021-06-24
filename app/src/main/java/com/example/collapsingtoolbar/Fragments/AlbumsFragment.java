@@ -3,12 +3,17 @@ package com.example.collapsingtoolbar.Fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.collapsingtoolbar.Adapter.MyRecyclerViewAdapter;
 import com.example.collapsingtoolbar.R;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +30,7 @@ public class AlbumsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    MyRecyclerViewAdapter adapter;
     public AlbumsFragment() {
         // Required empty public constructor
     }
@@ -46,6 +51,26 @@ public class AlbumsFragment extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
+        ArrayList<String> animalNames = new ArrayList<>();
+        animalNames.add("Horse");
+        animalNames.add("Cow");
+        animalNames.add("Camel");
+        animalNames.add("Sheep");
+        animalNames.add("Goat");
+
+        // set up the RecyclerView
+        RecyclerView recyclerView = requireView().findViewById(R.id.ImagesAlbum);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new MyRecyclerViewAdapter(getContext(), animalNames);
+        recyclerView.setAdapter(adapter);
+
     }
 
     @Override
