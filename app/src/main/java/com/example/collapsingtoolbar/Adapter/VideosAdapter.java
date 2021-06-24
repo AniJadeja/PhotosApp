@@ -28,6 +28,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
     Activity activity;
     OnVideoClickListner listner;
     TextView view;
+
     public VideosAdapter(Context context, ArrayList<VideoModel> arrayList, Activity activity, OnVideoClickListner listner) {
         this.context = context;
         this.arrayList = arrayList;
@@ -48,16 +49,18 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
 
 
         double preTime = arrayList.get(position).getDuration();
-        preTime = preTime/1000;
+        preTime = preTime / 1000;
         double hourX = preTime / 3600;
-        double minX  = (hourX%1) * 60;
-        double secX = (minX%1) * 60;
+        double minX = (hourX % 1) * 60;
+        double secX = (minX % 1) * 60;
+        hourX = hourX % 1;
 
-        String sec = String.valueOf((int)secX);
-        String min = String.valueOf((int)minX);
-        String hour = String.valueOf((int) hourX);
+        int sec = (int) secX;
+        int min = (int) minX;
+        int hour = (int) hourX;
 
 
+        Log.d("HMS", "setTime: " + hour + " " + min + " " + sec);
         setTime(sec, min, hour, holder);
 
         activity.runOnUiThread(() -> {
@@ -74,7 +77,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
     @Override
     public int getItemCount() {
         view = activity.findViewById(R.id.count);
-        view.setText(arrayList.size()+" Videos");
+        view.setText(arrayList.size() + " Videos");
         return arrayList.size();
     }
 
@@ -104,41 +107,47 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
     }
 
 
-    private void setTime(String sec, String min, String hour, MyViewHolder holder) {
-        String second, minute;
-        String[] secs = sec.split("");
+    private void setTime(int sec, int min, int hour, MyViewHolder holder) {
 
 
-        if (secs.length == 1)
-            second = "0 "+secs[0];
-        else second = secs[0] + " " + secs[1];
+        if (sec != 0 && min == 0 && hour == 0) {
+            setSec(sec, holder);
+        } else if (sec != 0 && min != 0 && hour == 0) {
+            setSecMin(String.valueOf(sec), String.valueOf(min), holder);
+        } else if (sec == 0 && min != 0 && hour == 0) {
+            String seco = String.valueOf(sec);
+            String[] secs = seco.split("");
 
-        String[] mins = min.split("");
-        if (mins.length == 1)
-            minute = "0 "+mins[0];
-        else minute = mins[0] + " " + mins[1];
+            if (secs.length == 1)
+                seco = "0 " + secs[0];
+            else
+                seco = secs[0]+" "+secs[1];
 
-        if (!sec.equals("0") && min.equals("0") && hour.equals("0")) {
-            setSec(second, holder);
-        }
 
-        else if (!sec.equals("0") && !min.equals("0") && hour.equals("0")) {
-            setSecMin(second,minute,holder);
-        }
-        else
-            holder.time.setText(hour+"  :  "+minute+"  :  "+second);
+
+
+            String mino = String.valueOf(min);
+            String[] mins = mino.split("");
+
+            if (mins.length == 1)
+                mino = "0 " + mins[0];
+            else
+                mino = mins[0]+" "+mins[1];
+
+
+                setSecMin(seco, mino, holder);
+        } else
+            holder.time.setText(hour + "  :  " + min + "  :  " + sec);
 
     }
 
-    private void setSec(String sec, MyViewHolder holder) {
-        holder.time.setText("0 0 : "+sec);
+    private void setSec(int sec, MyViewHolder holder) {
+        holder.time.setText("0 0 : " + sec);
     }
 
     private void setSecMin(String sec, String min, MyViewHolder holder) {
-        holder.time.setText(min+"  :  "+sec);
+        holder.time.setText(min + "  :  " + sec);
     }
-
-
 
 
 }

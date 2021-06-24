@@ -1,4 +1,4 @@
-package com.example.collapsingtoolbar.utils;
+package com.example.collapsingtoolbar.Fetch;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,7 +28,7 @@ public class FetchVideos {
     private static Boolean FETCHED = false;
 
 
-    public FetchVideos(Activity activity){
+    public FetchVideos(Activity activity) {
         this.activity = activity;
         arrayList = new ArrayList<>();
         previousList = new ArrayList<>();
@@ -37,30 +37,25 @@ public class FetchVideos {
 
     public ArrayList<VideoModel> fetchVideos() {
 
-        if(!FETCHED || !previousList.equals(arrayList)) {
+        if (!FETCHED || !previousList.equals(arrayList)) {
             Log.d("FetchVideos()", "fetchVideos: Initiated... ");
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
             projection = new String[]{MediaStore.Video.Media._ID,
-            MediaStore.Video.Media.DURATION};
+                    MediaStore.Video.Media.DURATION};
             orderBy = MediaStore.Video.Media.DEFAULT_SORT_ORDER;
             cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
             column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
-
-            new Thread(() -> {
-                while (cursor.moveToNext()) {
-                    Log.d("FetchVideos(): ", " Started");
-                    long mediaId = cursor.getLong(column_index_data);
-                    long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
-                    Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
-                    VideoModel videoModel = new VideoModel();
-                    videoModel.setDuration(duration);
-                    videoModel.setUri(uriMedia);
-                    arrayList.add(videoModel);
-                }
-                cursor.close();
-                Log.d("FetchVideos(): ", " Ended");
-
-            }).start();
+            while (cursor.moveToNext()) {
+                Log.d("FetchVideos(): ", " Started");
+                long mediaId = cursor.getLong(column_index_data);
+                long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+                Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
+                VideoModel videoModel = new VideoModel();
+                videoModel.setDuration(duration);
+                videoModel.setUri(uriMedia);
+                arrayList.add(videoModel);
+            }
+            cursor.close();
             FETCHED = true;
             previousList = arrayList;
         }
@@ -68,8 +63,9 @@ public class FetchVideos {
     }
 
 
-    public void setFETCHED(Boolean fetched)
-    {FETCHED =fetched;}
+    public void setFETCHED(Boolean fetched) {
+        FETCHED = fetched;
+    }
 }
 
 

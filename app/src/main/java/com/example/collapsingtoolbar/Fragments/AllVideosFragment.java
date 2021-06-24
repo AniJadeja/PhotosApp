@@ -1,32 +1,25 @@
 package com.example.collapsingtoolbar.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.collapsingtoolbar.Activities.FullPhoto;
 import com.example.collapsingtoolbar.Activities.VideoPlay;
 import com.example.collapsingtoolbar.Adapter.VideosAdapter;
 import com.example.collapsingtoolbar.Model.VideoModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.CustomRecyclerView;
-import com.example.collapsingtoolbar.utils.FetchVideos;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.example.collapsingtoolbar.Fetch.FetchVideos;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 
 public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideoClickListner {
