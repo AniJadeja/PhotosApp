@@ -1,34 +1,25 @@
 package com.example.collapsingtoolbar.Activities;
 
-import android.app.Activity;
-import android.content.ComponentCallbacks2;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.collapsingtoolbar.Adapter.FragmentAdapter;
 import com.example.collapsingtoolbar.Adapter.PhotosAdapter;
-import com.example.collapsingtoolbar.Adapter.VideosAdapter;
 import com.example.collapsingtoolbar.Fragments.AllPhotosFragment;
-import com.example.collapsingtoolbar.Fragments.AllVideosFragment;
 import com.example.collapsingtoolbar.R;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.lang.reflect.Field;
 
-import me.ibrahimsn.lib.SmoothBottomBar;
+
 
 public class MainActivity extends AppCompatActivity implements PhotosAdapter.NumberCallback{
 

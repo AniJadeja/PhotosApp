@@ -11,14 +11,65 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ImageTag"
+            android:text="Image Albums"
+            android:textColor="@color/hint"
+            android:textStyle="bold"
+            android:textSize="18sp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ImageAlbumCount"
+            android:text="Albums"
+            android:layout_toEndOf="@id/ImageTag"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/hint"
+            android:textSize="12sp"/>
+
+
+
+        <com.example.collapsingtoolbar.utils.CustomRecyclerView
+            android:layout_below="@id/ImageTag"
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/ImagesAlbum"/>
 
-
-        <androidx.recyclerview.widget.RecyclerView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/VideoTag"
             android:layout_below="@id/ImagesAlbum"
+            android:text="Video Albums"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/hint"
+            android:textStyle="bold"
+            android:textSize="18sp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/VideoAlbumCount"
+            android:text="Albums"
+            android:layout_below="@id/ImagesAlbum"
+            android:layout_toEndOf="@id/VideoTag"
+            android:layout_marginTop="25dp"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/hint"
+            android:textSize="12sp"/>
+
+
+        <com.example.collapsingtoolbar.utils.CustomRecyclerView
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/VideoTag"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/VideosAlbum"/>

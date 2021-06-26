@@ -59,6 +59,33 @@ public class FetchImages {
     }
 
 
+    public ArrayList<ImageModel> fetchImages(String Album) {
+
+        if (!FETCHED || !previousList.equals(arrayList)) {
+            uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+            orderBy = MediaStore.Images.Media.DATE_ADDED;
+            cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
+            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
+
+            while (cursor.moveToNext()) {
+                Log.d("FetchImages(): ", " Started");
+                long mediaId = cursor.getLong(column_index_data);
+                name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+                if (name.equals(Album)) {
+                    Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
+                    ImageModel imageModel = new ImageModel();
+                    imageModel.setUri(uriMedia);
+                    arrayList.add(imageModel);
+                }
+            }
+            cursor.close();
+            FETCHED = true;
+            previousList = arrayList;
+        }
+        return arrayList;
+    }
+
     public void setFETCHED(Boolean fetched) {
         FETCHED = fetched;
     }

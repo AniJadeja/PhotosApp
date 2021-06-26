@@ -1,91 +1,90 @@
 package com.example.collapsingtoolbar.Fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.example.collapsingtoolbar.Adapter.MyRecyclerViewAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.collapsingtoolbar.Adapter.AlbumAdapter;
+import com.example.collapsingtoolbar.Fetch.FetchAlbums;
+import com.example.collapsingtoolbar.Model.AlbumModel;
 import com.example.collapsingtoolbar.R;
+import com.example.collapsingtoolbar.utils.CustomRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AlbumsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AlbumsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    MyRecyclerViewAdapter adapter;
-    public AlbumsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AlbumsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AlbumsFragment newInstance(String param1, String param2) {
-        AlbumsFragment fragment = new AlbumsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    AlbumAdapter PhotoAdapter,VideoAdapter;
+    ArrayList<AlbumModel> PAlbum;
+    FetchAlbums PhotosAlbums,VideosAlbums;
+    CustomRecyclerView PhotosRV,VideosRV;
+    ArrayList<String> Photo,Video;
+    Thread Task ;
+    TextView count,IACount,VACount;
+    String TAG = "AlbumsFragment";
     @Override
     public void onStart() {
         super.onStart();
 
-
-        ArrayList<String> animalNames = new ArrayList<>();
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
-
-        // set up the RecyclerView
-        RecyclerView recyclerView = requireView().findViewById(R.id.ImagesAlbum);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MyRecyclerViewAdapter(getContext(), animalNames);
-        recyclerView.setAdapter(adapter);
-
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        Task = new Thread(this::init);
+        Task.start();
+        try {
+            Task.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
+
+    @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public void onResume() {
+        super.onResume();
+
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+            Photo = PhotosAlbums.fetchPhotosAlbums();
+            Video = VideosAlbums.fetchVideosAlbums();
+            count.setText(PhotosAlbums.PAlbumSize()+VideosAlbums.VAlbumSize()+getString(R.string._Albums));
+            IACount.setText(PhotosAlbums.PAlbumSize()+getString(R.string._Albums));
+            VACount.setText(VideosAlbums.VAlbumSize()+getString(R.string._Albums));
+            PhotoAdapter = new AlbumAdapter(Photo,getActivity());
+            VideoAdapter = new AlbumAdapter(Video,getActivity());
+            PhotosRV.setAdapter(PhotoAdapter);
+            VideosRV.setAdapter(VideoAdapter);
+        });
+
+
+    }
+
+    private void init()
+    {
+        count = Objects.requireNonNull(getActivity()).findViewById(R.id.count);
+        IACount = requireView().findViewById(R.id.ImageAlbumCount);
+        VACount = requireView().findViewById(R.id.VideoAlbumCount);
+        PhotosRV = requireView().findViewById(R.id.ImagesAlbum);
+        VideosRV = requireView().findViewById(R.id.VideosAlbum);
+        Photo = new ArrayList<>();
+        Video = new ArrayList<>();
+        PAlbum = new ArrayList<>();
+        PhotosAlbums = new FetchAlbums(getActivity());
+        VideosAlbums = new FetchAlbums(getActivity());
+        PhotosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));
+        VideosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));
+
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_albums, container, false);
     }
 }
