@@ -55,11 +55,6 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
         super.onResume();
         Task = new Thread(this::fetchImages);
         Task.start();
-        try {
-            Task.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -72,8 +67,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     public void onStop() {
         super.onStop();
         fetchVideos.setFETCHED(false);
-        Log.d(TAG, "onStop: called...");
-        Log.d(TAG, "onStop: setFetched(false)");
+
     }
 
 
@@ -84,7 +78,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     }
 
     void init() {
-        recyclerView = requireView().findViewById(R.id.recyclerview);
+        recyclerView = requireView().findViewById(R.id.recyclerviewVideos);
         layoutManager = new GridLayoutManager(getActivity(), 3);
         arrayList = new ArrayList<>();
         fetchVideos = new FetchVideos(getActivity());

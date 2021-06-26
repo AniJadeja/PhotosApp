@@ -1,21 +1,14 @@
 package com.example.collapsingtoolbar.Activities;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
-import android.app.AlertDialog;
-import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-
 
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.Dialog;
@@ -50,11 +43,12 @@ public class SplashScreen extends AppCompatActivity implements Dialog.DialogCall
 
             if (grantResults.length > 0 && grantResults[0] == 0) {
                 //permissions granted
-                new Handler(Looper.getMainLooper()).postDelayed(()->{
+
+                new Handler(Looper.getMainLooper()).post(()->{
                         startActivity(new Intent(this,MainActivity.class));
                         overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left);
                         finishAffinity();
-                },80);
+                });
 
 
             } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, "android.permission.READ_EXTERNAL_STORAGE")) {

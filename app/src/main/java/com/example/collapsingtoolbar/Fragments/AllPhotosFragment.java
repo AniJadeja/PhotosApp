@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,17 +28,18 @@ import java.util.ArrayList;
 public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImageClickListner {
 
 
-    CustomRecyclerView recyclerView;
+    public static CustomRecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     ArrayList<ImageModel> arrayList;
     FetchImages fetchImages;
     Thread Task;
-
+    Bundle bundle;
     String TAG ="AllPhotosFragment";
 
 
     public AllPhotosFragment() {}
     Parcelable State;
+    View view;
     PhotosAdapter adapter;
     @Override
     public void onStart() {
@@ -55,11 +58,6 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         super.onResume();
         Task = new Thread(this::fetchImages);
         Task.start();
-        try {
-            Task.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -74,10 +72,9 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         return inflater.inflate(R.layout.fragment_all_photos, container, false);
     }
 
-    void init() {
-        recyclerView = requireView().findViewById(R.id.recyclerview);
+    public void init() {
+        recyclerView = requireView().findViewById(R.id.recyclerviewPhotos);
         layoutManager = new GridLayoutManager(getActivity(), 4);
-        arrayList = new ArrayList<>();
         fetchImages = new FetchImages(getActivity());
     }
 
@@ -88,10 +85,10 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         State = layoutManager.onSaveInstanceState(); // Save RecyclerView State
     }
 
-    private void fetchImages() {
 
-        arrayList = fetchImages.fetchImages();
+    public void fetchImages() {
         new Thread(() -> requireActivity().runOnUiThread(() -> {
+            arrayList = fetchImages.fetchImages();
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(),this);
