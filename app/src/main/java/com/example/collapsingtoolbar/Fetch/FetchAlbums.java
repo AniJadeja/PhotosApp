@@ -17,6 +17,8 @@ public class FetchAlbums {
     private static ArrayList<String> VideosAlbums;
     private static ArrayList<String> PreVideosAlbums;
 
+    public  static ArrayList<AlbumModel> photo = new ArrayList<>();
+    public  static ArrayList<AlbumModel> video = new ArrayList<>();
 
     private static Uri uri = null;
     private static Uri ThumbURI = null;
@@ -36,9 +38,9 @@ public class FetchAlbums {
         VideosAlbums = new ArrayList<>();
     }
 
-    public ArrayList<String> fetchPhotosAlbums() {
+    public ArrayList<AlbumModel> fetchPhotosAlbums() {
 
-        ArrayList<AlbumModel> photo = new ArrayList<>();
+
 
         Log.d(TAG, "fetchPhotosAlbums: called...");
         if (!FETCHEDP || !PrePhotosAlbums.equals(PhotosAlbums)) {
@@ -54,15 +56,14 @@ public class FetchAlbums {
                 ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
                 if (!PhotosAlbums.contains(name)) {
                     ThumbURI = Uri.withAppendedPath(uri,""+ID);
-
                     AlbumModel albumModel = new AlbumModel();
                     albumModel.setAlbumName(name);
-                    Log.d("Added", "fetchPhotosAlbums: AlbumName Set " + name);
+                    Log.d("Photo Album Added", "AlbumName Set " + name);
                     albumModel.setThumbURI(ThumbURI);
-                    Log.d("Added", "fetchPhotosAlbums: ThumbURI set "+ThumbURI.toString());
+                    Log.d("Photo Album Added", "ThumbURI set "+ThumbURI.toString());
                     photo.add(albumModel);
                     PhotosAlbums.add(name);
-                    Log.d(TAG, "fetchPhotosAlbums: Album Added "+name);
+
                 }
             }
             cursor.close();
@@ -70,24 +71,35 @@ public class FetchAlbums {
             PrePhotosAlbums = PhotosAlbums;
             Log.d(TAG, "fetchPhotosAlbums: fetch ended...");
         }
-        return PhotosAlbums;
+        return photo;
     }
 
 
-    public ArrayList<String> fetchVideosAlbums() {
+    public ArrayList<AlbumModel> fetchVideosAlbums() {
+
+
         Log.d(TAG, "fetchVideosAlbums: called...");
         if (!FETCHEDV || !PreVideosAlbums.equals(VideosAlbums)) {
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-            projection = new String[]{MediaStore.Video.Media.BUCKET_DISPLAY_NAME};
+            projection = new String[]{
+                    MediaStore.Video.Media._ID,
+                    MediaStore.Video.Media.BUCKET_DISPLAY_NAME};
             orderBy = MediaStore.Video.Media.DATE_ADDED;
             cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
 
             while (cursor.moveToNext()) {
                 Log.d(TAG, "fetchVideosAlbums: fetch started...");
                 name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
+                ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
                 if (!VideosAlbums.contains(name)){
+                    ThumbURI = Uri.withAppendedPath(uri,""+ID);
+                    AlbumModel albumModel = new AlbumModel();
+                    albumModel.setAlbumName(name);
+                    Log.d("Video Album Added", "AlbumName Set " + name);
+                    albumModel.setThumbURI(ThumbURI);
+                    Log.d("Video Album Added", "ThumbURI set "+ThumbURI.toString());
+                    video.add(albumModel);
                     VideosAlbums.add(name);
-                    Log.d(TAG, "fetchVideosAlbums: Album Added "+name);
                 }
             }
             cursor.close();
@@ -95,7 +107,7 @@ public class FetchAlbums {
             PreVideosAlbums = VideosAlbums;
             Log.d(TAG, "fetchVideosAlbums: fetch ended...");
         }
-        return VideosAlbums;
+        return video;
     }
 
     public int VAlbumSize() {

@@ -2,7 +2,6 @@ package com.example.collapsingtoolbar.Fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.collapsingtoolbar.Adapter.AlbumAdapter;
 import com.example.collapsingtoolbar.Fetch.FetchAlbums;
@@ -24,10 +22,9 @@ import java.util.Objects;
 public class AlbumsFragment extends Fragment {
 
     AlbumAdapter PhotoAdapter,VideoAdapter;
-    ArrayList<AlbumModel> PAlbum;
     FetchAlbums PhotosAlbums,VideosAlbums;
     CustomRecyclerView PhotosRV,VideosRV;
-    ArrayList<String> Photo,Video;
+    ArrayList<AlbumModel> PhotoX, VideoX;
     Thread Task ;
     TextView count,IACount,VACount;
     String TAG = "AlbumsFragment";
@@ -51,13 +48,13 @@ public class AlbumsFragment extends Fragment {
         super.onResume();
 
         Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-            Photo = PhotosAlbums.fetchPhotosAlbums();
-            Video = VideosAlbums.fetchVideosAlbums();
+            PhotoX = PhotosAlbums.fetchPhotosAlbums();
+            VideoX = VideosAlbums.fetchVideosAlbums();
             count.setText(PhotosAlbums.PAlbumSize()+VideosAlbums.VAlbumSize()+getString(R.string._Albums));
             IACount.setText(PhotosAlbums.PAlbumSize()+getString(R.string._Albums));
             VACount.setText(VideosAlbums.VAlbumSize()+getString(R.string._Albums));
-            PhotoAdapter = new AlbumAdapter(Photo,getActivity());
-            VideoAdapter = new AlbumAdapter(Video,getActivity());
+            PhotoAdapter = new AlbumAdapter(getContext(),PhotoX,getActivity());
+            VideoAdapter = new AlbumAdapter(getContext(),VideoX,getActivity());
             PhotosRV.setAdapter(PhotoAdapter);
             VideosRV.setAdapter(VideoAdapter);
         });
@@ -72,9 +69,6 @@ public class AlbumsFragment extends Fragment {
         VACount = requireView().findViewById(R.id.VideoAlbumCount);
         PhotosRV = requireView().findViewById(R.id.ImagesAlbum);
         VideosRV = requireView().findViewById(R.id.VideosAlbum);
-        Photo = new ArrayList<>();
-        Video = new ArrayList<>();
-        PAlbum = new ArrayList<>();
         PhotosAlbums = new FetchAlbums(getActivity());
         VideosAlbums = new FetchAlbums(getActivity());
         PhotosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));

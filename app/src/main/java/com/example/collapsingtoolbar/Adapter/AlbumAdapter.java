@@ -29,16 +29,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
 
 
     Context context;
-    ArrayList<String> arrayList;
     ArrayList<AlbumModel> arrayListX;
     Activity activity;
     OnImageClickListner listner;
 
-    public AlbumAdapter (ArrayList<String> arrayList,Activity activity)
-    {
-        this.arrayList = arrayList;
-        this.activity  = activity;
-    }
 
     public AlbumAdapter (Context context,ArrayList<AlbumModel> arrayListX, Activity activity)
     {
@@ -47,9 +41,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         this.activity  = activity;
     }
 
-    public AlbumAdapter(Context context, ArrayList<String> arrayList, Activity activity, OnImageClickListner listner) {
+    public AlbumAdapter(Context context, ArrayList<AlbumModel> arrayListX, Activity activity, OnImageClickListner listner) {
         this.context = context;
-        this.arrayList = arrayList;
+        this.arrayListX = arrayListX;
         this.activity = activity;
         this.listner = listner;
     }
@@ -63,15 +57,15 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.duration.setText(arrayList.get(position));
-       /* Glide.with(context)
+        holder.duration.setText(setName(arrayListX.get(position).getAlbumName()));
+        Glide.with(context)
                 .load(arrayListX.get(position).getThumbURI())
-                .into(holder.img);*/
+                .into(holder.img);
     }
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return arrayListX.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -97,7 +91,33 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         void onclick(int position);
     }
 
+    private String setName(String AlbumName)
+    {
+        String AlBack= AlbumName;
+        boolean flag = false;
 
+        try {
+            AlbumName = AlbumName.replace("WhatsApp", "WA")
+                    .replace("Documents", "Docs")
+                    .replace("Screenshots", "SS")
+                    .replace("_", " ")
+                    .replace("-", " ");
+            flag = true;
+        } catch (Exception e) {
+            Log.d("StringReplace", "onBindViewHolder: " + e.toString());
+        }
+
+
+        if (AlbumName.length() > 10) {
+            AlbumName = AlbumName.substring(0, 9);
+            AlbumName = AlbumName.concat(" ..");
+        }
+
+        if (!flag)
+            AlbumName = AlBack;
+
+        return AlbumName;
+    }
 
 }
 
