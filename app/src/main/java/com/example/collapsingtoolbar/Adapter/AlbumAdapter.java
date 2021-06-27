@@ -58,7 +58,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.duration.setText(setName(arrayListX.get(position).getAlbumName()));
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(arrayListX.get(position).getThumbURI())
                 .into(holder.img);
     }

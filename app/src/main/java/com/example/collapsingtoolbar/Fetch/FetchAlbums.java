@@ -12,13 +12,15 @@ import java.util.ArrayList;
 
 public class FetchAlbums {
 
-    public static ArrayList<String> PhotosAlbums;
+    private static ArrayList<String> PhotosAlbums;
     private static ArrayList<String> PrePhotosAlbums;
     private static ArrayList<String> VideosAlbums;
     private static ArrayList<String> PreVideosAlbums;
 
     public  static ArrayList<AlbumModel> photo = new ArrayList<>();
+    public  static ArrayList<AlbumModel> prephoto = new ArrayList<>();
     public  static ArrayList<AlbumModel> video = new ArrayList<>();
+    public  static ArrayList<AlbumModel> prevideo = new ArrayList<>();
 
     private static Uri uri = null;
     private static Uri ThumbURI = null;
@@ -36,14 +38,19 @@ public class FetchAlbums {
         this.activity = activity;
         PhotosAlbums = new ArrayList<>();
         VideosAlbums = new ArrayList<>();
+        PrePhotosAlbums = new ArrayList<>();
+        PreVideosAlbums = new ArrayList<>();
     }
 
     public ArrayList<AlbumModel> fetchPhotosAlbums() {
 
 
 
-        Log.d(TAG, "fetchPhotosAlbums: called...");
-        if (!FETCHEDP || !PrePhotosAlbums.equals(PhotosAlbums)) {
+        //Log.d(TAG, "fetchPhotosAlbums: called...");
+        if (!FETCHEDP || !photo.equals(prephoto)) {
+
+            Log.d(TAG, "fetchPhotosAlbums: GOT FETCHEDP "+FETCHEDP );
+            Log.d(TAG, "fetchPhotosAlbums: EQUALITY "+PrePhotosAlbums.equals(PhotosAlbums));
             uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
             projection = new String[]{MediaStore.Images.Media._ID
                     ,MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
@@ -51,16 +58,16 @@ public class FetchAlbums {
             cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
 
             while (cursor.moveToNext()) {
-                Log.d(TAG, "fetchPhotosAlbums: fetch started...");
+                //Log.d(TAG, "fetchPhotosAlbums: fetch started...");
                 name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
                 ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
                 if (!PhotosAlbums.contains(name)) {
                     ThumbURI = Uri.withAppendedPath(uri,""+ID);
                     AlbumModel albumModel = new AlbumModel();
                     albumModel.setAlbumName(name);
-                    Log.d("Photo Album Added", "AlbumName Set " + name);
+                    //Log.d("Photo Album Added", "AlbumName Set " + name);
                     albumModel.setThumbURI(ThumbURI);
-                    Log.d("Photo Album Added", "ThumbURI set "+ThumbURI.toString());
+                    //Log.d("Photo Album Added", "ThumbURI set "+ThumbURI.toString());
                     photo.add(albumModel);
                     PhotosAlbums.add(name);
 
@@ -68,8 +75,19 @@ public class FetchAlbums {
             }
             cursor.close();
             FETCHEDP = true;
+            prephoto = photo;
             PrePhotosAlbums = PhotosAlbums;
-            Log.d(TAG, "fetchPhotosAlbums: fetch ended...");
+            /*for (int i = 0;i<PrePhotosAlbums.size() ; i++ )
+            {
+                Log.d(TAG, "fetchPhotosAlbums: PrePhotosAlbums "+PrePhotosAlbums.get(i));
+            }
+            for (int i = 0;i<PhotosAlbums.size() ; i++ )
+            {
+                Log.d(TAG, "fetchPhotosAlbums: PhotosAlbums "+PhotosAlbums.get(i));
+            }*/
+            Log.d(TAG, "fetchPhotosAlbums: EQUALITY "+PrePhotosAlbums.equals(PhotosAlbums));
+            Log.d(TAG, "fetchPhotosAlbums: SET FETCHEDP "+FETCHEDP);
+           // Log.d(TAG, "fetchPhotosAlbums: fetch ended...");
         }
         return photo;
     }
@@ -79,7 +97,7 @@ public class FetchAlbums {
 
 
         Log.d(TAG, "fetchVideosAlbums: called...");
-        if (!FETCHEDV || !PreVideosAlbums.equals(VideosAlbums)) {
+        if (!FETCHEDV || !prevideo.equals(video)) {
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
             projection = new String[]{
                     MediaStore.Video.Media._ID,
@@ -104,6 +122,7 @@ public class FetchAlbums {
             }
             cursor.close();
             FETCHEDV = true;
+            prevideo = video;
             PreVideosAlbums = VideosAlbums;
             Log.d(TAG, "fetchVideosAlbums: fetch ended...");
         }

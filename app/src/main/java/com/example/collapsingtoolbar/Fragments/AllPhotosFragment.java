@@ -108,16 +108,14 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
                 arrayList = fetchImages.fetchImages(Album);
                 Log.d(TAG, "AlbumPhotos: ArrayList set to " + Album);
                 Log.d(TAG, "AlbumPhotos: " + Album+" Size "+arrayList.size());
-                for (int i = 0;i<arrayList.size();i++)
-                {
-                    Log.d(TAG, "AlbumPhotos: ");arrayList.get(i).getUri().toString();
-                }
+
             }
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this);
 //            Log.d("getItemCount"," "+adapter.getItemCount());
-            recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
+        //recyclerView.swapAdapter(adapter,true);
             layoutManager.onRestoreInstanceState(State); // Restore State
             Log.d("FetchImages(): ", " RecyclerView Adapter attached");
 

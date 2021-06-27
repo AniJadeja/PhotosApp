@@ -48,8 +48,14 @@ public class AlbumsFragment extends Fragment implements AlbumAdapter.OnAlbumClic
     @Override
     public void onPause() {
         super.onPause();
-        photosAlbums.setFETCHEDP(false);
-        VideosAlbums.setFETCHEDV(false);
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        /*photosAlbums.setFETCHEDP(false);
+        VideosAlbums.setFETCHEDV(false);*/
     }
 
     @SuppressLint("SetTextI18n")
@@ -64,7 +70,7 @@ public class AlbumsFragment extends Fragment implements AlbumAdapter.OnAlbumClic
             PhotosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));
             VideosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));
             count.setText(photosAlbums.PAlbumSize()+VideosAlbums.VAlbumSize()+getString(R.string._Albums));
-            IACount.setText(photosAlbums.PAlbumSize()+getString(R.string._Albums));
+            IACount.setText(PhotoX.size()+getString(R.string._Albums));
             VACount.setText(VideosAlbums.VAlbumSize()+getString(R.string._Albums));
             PhotoAdapter = new AlbumAdapter(getContext(),PhotoX,getActivity(),this);
             VideoAdapter = new AlbumAdapter(getContext(),VideoX,getActivity());

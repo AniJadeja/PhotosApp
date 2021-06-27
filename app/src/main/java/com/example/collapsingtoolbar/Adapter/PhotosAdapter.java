@@ -2,7 +2,6 @@ package com.example.collapsingtoolbar.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.collapsingtoolbar.Activities.MainActivity;
 import com.example.collapsingtoolbar.Model.ImageModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.GlideApp;
