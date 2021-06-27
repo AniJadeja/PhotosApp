@@ -1,6 +1,7 @@
 package com.example.collapsingtoolbar.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.example.collapsingtoolbar.Activities.AlbumPhotos;
 import com.example.collapsingtoolbar.Adapter.AlbumAdapter;
 import com.example.collapsingtoolbar.Fetch.FetchAlbums;
 import com.example.collapsingtoolbar.Model.AlbumModel;
@@ -17,15 +21,15 @@ import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.CustomRecyclerView;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class AlbumsFragment extends Fragment {
+public class AlbumsFragment extends Fragment implements AlbumAdapter.OnAlbumClickListner {
 
     AlbumAdapter PhotoAdapter,VideoAdapter;
-    FetchAlbums PhotosAlbums,VideosAlbums;
+    FetchAlbums photosAlbums,VideosAlbums;
     CustomRecyclerView PhotosRV,VideosRV;
     ArrayList<AlbumModel> PhotoX, VideoX;
     Thread Task ;
+    ArrayList<String> photo;
     TextView count,IACount,VACount;
     String TAG = "AlbumsFragment";
     @Override
@@ -41,22 +45,32 @@ public class AlbumsFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        photosAlbums.setFETCHEDP(false);
+        VideosAlbums.setFETCHEDV(false);
+    }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onResume() {
         super.onResume();
 
-        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-            PhotoX = PhotosAlbums.fetchPhotosAlbums();
+        requireActivity().runOnUiThread(() -> {
+            PhotoX = photosAlbums.fetchPhotosAlbums();
+            photo = photosAlbums.PAlbum();
             VideoX = VideosAlbums.fetchVideosAlbums();
-            count.setText(PhotosAlbums.PAlbumSize()+VideosAlbums.VAlbumSize()+getString(R.string._Albums));
-            IACount.setText(PhotosAlbums.PAlbumSize()+getString(R.string._Albums));
+            PhotosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));
+            VideosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));
+            count.setText(photosAlbums.PAlbumSize()+VideosAlbums.VAlbumSize()+getString(R.string._Albums));
+            IACount.setText(photosAlbums.PAlbumSize()+getString(R.string._Albums));
             VACount.setText(VideosAlbums.VAlbumSize()+getString(R.string._Albums));
-            PhotoAdapter = new AlbumAdapter(getContext(),PhotoX,getActivity());
+            PhotoAdapter = new AlbumAdapter(getContext(),PhotoX,getActivity(),this);
             VideoAdapter = new AlbumAdapter(getContext(),VideoX,getActivity());
             PhotosRV.setAdapter(PhotoAdapter);
             VideosRV.setAdapter(VideoAdapter);
+
         });
 
 
@@ -64,15 +78,15 @@ public class AlbumsFragment extends Fragment {
 
     private void init()
     {
-        count = Objects.requireNonNull(getActivity()).findViewById(R.id.count);
+        count = requireActivity().findViewById(R.id.count);
         IACount = requireView().findViewById(R.id.ImageAlbumCount);
         VACount = requireView().findViewById(R.id.VideoAlbumCount);
         PhotosRV = requireView().findViewById(R.id.ImagesAlbum);
         VideosRV = requireView().findViewById(R.id.VideosAlbum);
-        PhotosAlbums = new FetchAlbums(getActivity());
+        photosAlbums = new FetchAlbums(getActivity());
         VideosAlbums = new FetchAlbums(getActivity());
-        PhotosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));
-        VideosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));
+        photo = new ArrayList<>();
+
 
     }
 
@@ -81,4 +95,14 @@ public class AlbumsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_albums, container, false);
     }
+
+    @Override
+    public void onclick(int position) {
+        Intent i =new Intent(getActivity(), AlbumPhotos.class);
+        i.putExtra("position",position);
+        getActivity().startActivity(i);
+    }
+
+
+
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class FetchAlbums {
 
-    private static ArrayList<String> PhotosAlbums;
+    public static ArrayList<String> PhotosAlbums;
     private static ArrayList<String> PrePhotosAlbums;
     private static ArrayList<String> VideosAlbums;
     private static ArrayList<String> PreVideosAlbums;
@@ -118,6 +118,9 @@ public class FetchAlbums {
         return PhotosAlbums.size();
     }
 
+    public ArrayList<String> PAlbum(){ return PhotosAlbums;}
+
+    public ArrayList<String> VAlbum(){ return VideosAlbums;}
 
     public void setFETCHEDP(Boolean fetched) {
         FETCHEDP = fetched;

@@ -31,7 +31,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     Context context;
     ArrayList<AlbumModel> arrayListX;
     Activity activity;
-    OnImageClickListner listner;
+    OnAlbumClickListner listner;
 
 
     public AlbumAdapter (Context context,ArrayList<AlbumModel> arrayListX, Activity activity)
@@ -41,7 +41,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         this.activity  = activity;
     }
 
-    public AlbumAdapter(Context context, ArrayList<AlbumModel> arrayListX, Activity activity, OnImageClickListner listner) {
+    public AlbumAdapter(Context context, ArrayList<AlbumModel> arrayListX, Activity activity, OnAlbumClickListner listner) {
         this.context = context;
         this.arrayListX = arrayListX;
         this.activity = activity;
@@ -71,9 +71,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView img;
-        OnImageClickListner listner;
+        OnAlbumClickListner listner;
         TextView duration;
-        public MyViewHolder(@NonNull View itemView, OnImageClickListner listner) {
+        public MyViewHolder(@NonNull View itemView, OnAlbumClickListner listner) {
             super(itemView);
             this.listner = listner;
             itemView.setOnClickListener(this);
@@ -87,7 +87,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         }
     }
 
-    public  interface  OnImageClickListner{
+    public  interface  OnAlbumClickListner{
         void onclick(int position);
     }
 

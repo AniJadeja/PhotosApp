@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.example.collapsingtoolbar.Fetch.FetchImages;
 import com.example.collapsingtoolbar.utils.CustomRecyclerView;
 
 import java.util.ArrayList;
+import java.util.SplittableRandom;
 
 
 public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImageClickListner {
@@ -34,36 +36,47 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     FetchImages fetchImages;
     Thread Task;
     Bundle bundle;
-    String TAG ="AllPhotosFragment";
+    PhotosAdapter.OnImageClickListner onImageClickListner;
+    static String Album = "";
+    String TAG = "AllPhotosFragment";
 
 
-    public AllPhotosFragment() {}
+    public AllPhotosFragment() {
+    }
+
+    public AllPhotosFragment(String Album) {
+        AllPhotosFragment.Album = Album;
+        Log.d(TAG, "AlbumPhotos: ArrayList set to " + AllPhotosFragment.Album + " By Activity");
+    }
+
     Parcelable State;
     View view;
     PhotosAdapter adapter;
+
     @Override
     public void onStart() {
         super.onStart();
-         Task = new Thread(this::init);
-         Task.start();
+        Task = new Thread(this::init);
+        Task.start();
         try {
             Task.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        getActivity().runOnUiThread(this::fetchImages);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Task = new Thread(this::fetchImages);
-        Task.start();
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
         fetchImages.setFETCHED(false);
+        fetchImages.setFETCHEDA(false);
     }
 
     @Override
@@ -87,24 +100,36 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
 
 
     public void fetchImages() {
-        new Thread(() -> requireActivity().runOnUiThread(() -> {
-            arrayList = fetchImages.fetchImages();
+
+
+            if (Album.equals("")) {
+                arrayList = fetchImages.fetchImages();
+            } else {
+                arrayList = fetchImages.fetchImages(Album);
+                Log.d(TAG, "AlbumPhotos: ArrayList set to " + Album);
+                Log.d(TAG, "AlbumPhotos: " + Album+" Size "+arrayList.size());
+                for (int i = 0;i<arrayList.size();i++)
+                {
+                    Log.d(TAG, "AlbumPhotos: ");arrayList.get(i).getUri().toString();
+                }
+            }
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(),this);
-            Log.d("getItemCount"," "+adapter.getItemCount());
+            adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this);
+//            Log.d("getItemCount"," "+adapter.getItemCount());
             recyclerView.setAdapter(adapter);
             layoutManager.onRestoreInstanceState(State); // Restore State
             Log.d("FetchImages(): ", " RecyclerView Adapter attached");
-        })
-        ).start();
+
+
+
     }
 
 
     @Override
     public void onclick(int position) {
         Intent intent = new Intent(getActivity(), FullPhoto.class);
-        intent.putExtra("uri",arrayList.get(position).getUri().toString());
+        intent.putExtra("uri", arrayList.get(position).getUri().toString());
         startActivity(intent);
     }
 }

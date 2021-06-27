@@ -21,16 +21,14 @@ import java.lang.reflect.Field;
 
 
 
-public class MainActivity extends AppCompatActivity implements PhotosAdapter.NumberCallback{
+public class MainActivity extends AppCompatActivity{
 
     CollapsingToolbarLayout collapsingToolbar;
     EditText search;
     Thread Task;
     ViewPager2 pager2;
     FragmentAdapter adapter;
-    PhotosAdapter photosAdapter;
     TextView Imagecount;
-    public int photos;
     AllPhotosFragment fragment;
 
     @Override
@@ -58,8 +56,7 @@ public class MainActivity extends AppCompatActivity implements PhotosAdapter.Num
         adapter = new FragmentAdapter(getSupportFragmentManager(),getLifecycle());
         Imagecount = findViewById(R.id.count);
         fragment = new AllPhotosFragment();
-        photosAdapter = new PhotosAdapter();
-        photosAdapter.setCallback(this);
+
 
 
         pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -68,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements PhotosAdapter.Num
                 if (pager2.getCurrentItem() == 0)
                 {
                     collapsingToolbar.setTitle("All Photos");
-                    Log.d("Fetched Value", "onPageSelected: "+photos);
                 }
                 else if (pager2.getCurrentItem() == 1)
                 {collapsingToolbar.setTitle("All Videos");
@@ -94,8 +90,4 @@ public class MainActivity extends AppCompatActivity implements PhotosAdapter.Num
 
     }
 
-    @Override
-    public void number(int num) {
-       // Imagecount.setText(num+" Photos");
-    }
 }

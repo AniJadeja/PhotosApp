@@ -29,8 +29,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     ArrayList<ImageModel> arrayList;
     Activity activity;
     OnImageClickListner listner;
-    MainActivity mactivity;
-    NumberCallback callback;
+
     TextView view;
     public PhotosAdapter ()
     {}
@@ -40,7 +39,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
         this.arrayList = arrayList;
         this.activity = activity;
         this.listner = listner;
-        mactivity = new MainActivity();
+
     }
 
     @NonNull
@@ -67,8 +66,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        view = activity.findViewById(R.id.count);
-        view.setText(arrayList.size()+" Photos");
+       /* view = activity.findViewById(R.id.count);
+        view.setText(arrayList.size()+" Photos");*/
         return arrayList.size();
     }
 
@@ -94,12 +93,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
          void onclick(int position);
     }
 
-    public void setCallback(NumberCallback callback){this.callback = callback;}
 
-    public interface NumberCallback
-    {
-        void number(int num);
-    }
 
 
 }
