@@ -35,8 +35,6 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     ArrayList<ImageModel> arrayList;
     FetchImages fetchImages;
     Thread Task;
-    Bundle bundle;
-    PhotosAdapter.OnImageClickListner onImageClickListner;
     static String Album = "";
     String TAG = "AllPhotosFragment";
 
@@ -46,7 +44,6 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
 
     public AllPhotosFragment(String Album) {
         AllPhotosFragment.Album = Album;
-        Log.d(TAG, "AlbumPhotos: ArrayList set to " + AllPhotosFragment.Album + " By Activity");
     }
 
     Parcelable State;
@@ -102,23 +99,16 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     public void fetchImages() {
 
 
-            if (Album.equals("")) {
-                arrayList = fetchImages.fetchImages();
-            } else {
-                arrayList = fetchImages.fetchImages(Album);
-                Log.d(TAG, "AlbumPhotos: ArrayList set to " + Album);
-                Log.d(TAG, "AlbumPhotos: " + Album+" Size "+arrayList.size());
-
-            }
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setHasFixedSize(true);
-            adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this);
-//            Log.d("getItemCount"," "+adapter.getItemCount());
+        if (Album.equals(""))
+            arrayList = fetchImages.fetchImages();
+        else
+            arrayList = fetchImages.fetchImages(Album);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this);
         recyclerView.setAdapter(adapter);
-        //recyclerView.swapAdapter(adapter,true);
-            layoutManager.onRestoreInstanceState(State); // Restore State
-            Log.d("FetchImages(): ", " RecyclerView Adapter attached");
-
+        layoutManager.onRestoreInstanceState(State); // Restore State
+        Log.d("FetchImages(): ", " RecyclerView Adapter attached");
 
 
     }

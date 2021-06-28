@@ -3,14 +3,14 @@ package com.example.collapsingtoolbar.Fragments;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.LongDef;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.collapsingtoolbar.Activities.AlbumPhotos;
@@ -27,9 +27,9 @@ public class AlbumsFragment extends Fragment implements AlbumAdapter.OnAlbumClic
     AlbumAdapter PhotoAdapter,VideoAdapter;
     FetchAlbums photosAlbums,VideosAlbums;
     CustomRecyclerView PhotosRV,VideosRV;
-    ArrayList<AlbumModel> PhotoX, VideoX;
+    ArrayList<AlbumModel> photoX, videoX;
+    ArrayList<AlbumModel> PrePhoto, PreVideo;
     Thread Task ;
-    ArrayList<String> photo;
     TextView count,IACount,VACount;
     String TAG = "AlbumsFragment";
     @Override
@@ -48,35 +48,34 @@ public class AlbumsFragment extends Fragment implements AlbumAdapter.OnAlbumClic
     @Override
     public void onPause() {
         super.onPause();
-
+        Log.d(TAG, "onPause: Not Added ");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        /*photosAlbums.setFETCHEDP(false);
-        VideosAlbums.setFETCHEDV(false);*/
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onResume() {
         super.onResume();
-
+        Log.d(TAG, "onResume: Added on Resume()");
         requireActivity().runOnUiThread(() -> {
-            PhotoX = photosAlbums.fetchPhotosAlbums();
-            photo = photosAlbums.PAlbum();
-            VideoX = VideosAlbums.fetchVideosAlbums();
+            photoX = photosAlbums.fetchPhotosAlbums();
             PhotosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));
-            VideosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));
-            count.setText(photosAlbums.PAlbumSize()+VideosAlbums.VAlbumSize()+getString(R.string._Albums));
-            IACount.setText(PhotoX.size()+getString(R.string._Albums));
-            VACount.setText(VideosAlbums.VAlbumSize()+getString(R.string._Albums));
-            PhotoAdapter = new AlbumAdapter(getContext(),PhotoX,getActivity(),this);
-            VideoAdapter = new AlbumAdapter(getContext(),VideoX,getActivity());
+            IACount.setText(photoX.size()+getString(R.string._Albums));
+            PhotoAdapter = new AlbumAdapter(getContext(),photoX,getActivity(),this);
             PhotosRV.setAdapter(PhotoAdapter);
-            VideosRV.setAdapter(VideoAdapter);
 
+
+
+            videoX = VideosAlbums.fetchVideosAlbums();
+            VideosRV.setLayoutManager(new GridLayoutManager(getActivity(),3));
+            VACount.setText(videoX.size()+getString(R.string._Albums));
+            VideoAdapter = new AlbumAdapter(getContext(),videoX,getActivity());
+            VideosRV.setAdapter(VideoAdapter);
+            count.setText(photoX.size()+videoX.size()+getString(R.string._Albums));
         });
 
 
@@ -91,9 +90,6 @@ public class AlbumsFragment extends Fragment implements AlbumAdapter.OnAlbumClic
         VideosRV = requireView().findViewById(R.id.VideosAlbum);
         photosAlbums = new FetchAlbums(getActivity());
         VideosAlbums = new FetchAlbums(getActivity());
-        photo = new ArrayList<>();
-
-
     }
 
 

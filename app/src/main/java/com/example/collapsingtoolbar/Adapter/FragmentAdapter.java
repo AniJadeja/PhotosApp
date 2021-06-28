@@ -27,11 +27,11 @@ public class FragmentAdapter extends FragmentStateAdapter {
         switch (position)
         {
             case 1: return videosFragment;
-            case 2: return new AlbumsFragment();
+            case 2: return photosFragment;
 
         }
 
-        return photosFragment;
+        return new AlbumsFragment();
     }
 
     @Override
