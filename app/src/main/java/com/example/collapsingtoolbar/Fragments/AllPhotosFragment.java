@@ -1,5 +1,6 @@
 package com.example.collapsingtoolbar.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,7 +49,6 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     }
 
     Parcelable State;
-    View view;
     PhotosAdapter adapter;
 
     @Override
@@ -60,20 +61,19 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        getActivity().runOnUiThread(this::fetchImages);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        getActivity().runOnUiThread(this::fetchImages);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        fetchImages.setFETCHED(false);
-        fetchImages.setFETCHEDA(false);
+
     }
 
     @Override
@@ -96,21 +96,19 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     }
 
 
+    @SuppressLint("SetTextI18n")
     public void fetchImages() {
-
-
         if (Album.equals(""))
-            arrayList = fetchImages.fetchImages();
+            arrayList = fetchImages.fetchImages("");
         else
             arrayList = fetchImages.fetchImages(Album);
+        TextView count = requireActivity().findViewById(R.id.count);
+        count.setText(arrayList.size()+" Photos");
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this);
         recyclerView.setAdapter(adapter);
         layoutManager.onRestoreInstanceState(State); // Restore State
-        Log.d("FetchImages(): ", " RecyclerView Adapter attached");
-
-
     }
 
 

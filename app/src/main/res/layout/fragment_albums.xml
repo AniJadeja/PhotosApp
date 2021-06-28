@@ -10,27 +10,29 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="19dp"
             android:id="@+id/ImageTag"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="12dp"
             android:text="Image Albums"
             android:textColor="@color/hint"
-            android:textStyle="bold"
-            android:textSize="18sp"/>
-
-
-        <TextView
+            android:textStyle="normal"
+            android:fontFamily="@font/odin"
+            android:textSize="15sp"/>
+        <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ImageAlbumCount"
-            android:text="Albums"
-            android:layout_toEndOf="@id/ImageTag"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="20dp"
-            android:textColor="@color/hint"
+            android:layout_height="25dp"
+            android:id="@+id/AllImageAlbums"
+            android:padding="0dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:layout_marginEnd="20dp"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="VIEW All"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/red"
             android:textSize="12sp"/>
 
 
@@ -44,38 +46,40 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="19dp"
             android:id="@+id/VideoTag"
+            android:layout_marginStart="12dp"
+            android:fontFamily="@font/odin"
             android:layout_below="@id/ImagesAlbum"
             android:text="Video Albums"
             android:layout_marginTop="20dp"
             android:textColor="@color/hint"
-            android:textStyle="bold"
-            android:textSize="18sp"/>
+            android:textStyle="normal"
+            android:textSize="15sp"/>
 
-
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/VideoAlbumCount"
-            android:text="Albums"
+            android:layout_height="25dp"
+            android:id="@+id/AllVideoAlbums"
+            android:padding="0dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:layout_marginEnd="20dp"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="VIEW All"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="13dp"
             android:layout_below="@id/ImagesAlbum"
-            android:layout_toEndOf="@id/VideoTag"
-            android:layout_marginTop="25dp"
-            android:layout_marginStart="20dp"
-            android:textColor="@color/hint"
+            android:textColor="@color/red"
             android:textSize="12sp"/>
 
 
         <com.example.collapsingtoolbar.utils.CustomRecyclerView
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_below="@id/VideoTag"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/VideosAlbum"/>
     </RelativeLayout>
-
-
-
 
 </androidx.core.widget.NestedScrollView>

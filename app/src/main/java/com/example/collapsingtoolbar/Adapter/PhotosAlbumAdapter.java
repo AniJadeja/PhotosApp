@@ -3,7 +3,6 @@ package com.example.collapsingtoolbar.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +13,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.example.collapsingtoolbar.Activities.MainActivity;
 import com.example.collapsingtoolbar.Model.AlbumModel;
-import com.example.collapsingtoolbar.Model.ImageModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.GlideApp;
 
 import java.util.ArrayList;
 
-public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder> {
+import static com.example.collapsingtoolbar.Fragments.AlbumsFragment.IMAGE;
+
+public class PhotosAlbumAdapter extends RecyclerView.Adapter<PhotosAlbumAdapter.MyViewHolder> {
 
 
     Context context;
@@ -34,18 +30,12 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     OnAlbumClickListner listner;
 
 
-    public AlbumAdapter (Context context,ArrayList<AlbumModel> arrayListX, Activity activity)
-    {
-        this.context = context;
-        this.arrayListX = arrayListX;
-        this.activity  = activity;
-    }
-
-    public AlbumAdapter(Context context, ArrayList<AlbumModel> arrayListX, Activity activity, OnAlbumClickListner listner) {
+    public PhotosAlbumAdapter(Context context, ArrayList<AlbumModel> arrayListX, Activity activity, OnAlbumClickListner listner) {
         this.context = context;
         this.arrayListX = arrayListX;
         this.activity = activity;
         this.listner = listner;
+
     }
 
     @NonNull
@@ -83,12 +73,12 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
 
         @Override
         public void onClick(View v) {
-            listner.onclick(getAdapterPosition());
+            listner.onclick(getAdapterPosition(),IMAGE);
         }
     }
 
     public  interface  OnAlbumClickListner{
-        void onclick(int position);
+        void onclick(int position,String type);
     }
 
     private String setName(String AlbumName)

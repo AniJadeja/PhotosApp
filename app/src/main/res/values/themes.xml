@@ -27,8 +27,7 @@
     </style>
 
 
-    <style name="TextAppearance.AppCompat.Title">
-
+    <style name="TextAppearance.AppCompat.SmallTitle">
         <item name="android:textSize">18sp</item>
     </style>
 

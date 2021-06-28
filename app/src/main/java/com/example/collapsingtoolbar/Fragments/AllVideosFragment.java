@@ -1,5 +1,6 @@
 package com.example.collapsingtoolbar.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -31,14 +33,16 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     FetchVideos fetchVideos;
     Thread Task;
     Parcelable State;
+    static String Album="";
     String TAG = "AllVideosFragment";
 
 
     public AllVideosFragment() {}
+    public AllVideosFragment(String Album) {
+        AllVideosFragment.Album = Album;}
 
     @Override
     public void onStart() {
-        Log.d(TAG, "onStart: called...");
         super.onStart();
         Task = new Thread(this::init);
         Task.start();
@@ -51,10 +55,8 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume: callled...");
         super.onResume();
-        Task = new Thread(this::fetchImages);
-        Task.start();
+        getActivity().runOnUiThread(this::fetchImages);
     }
 
     @Override
@@ -66,7 +68,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     @Override
     public void onStop() {
         super.onStop();
-        fetchVideos.setFETCHED(false);
+
 
     }
 
@@ -86,15 +88,20 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
 
 
 
+    @SuppressLint("SetTextI18n")
     private void fetchImages() {
-        arrayList = fetchVideos.fetchVideos();
+        if (Album.equals(""))
+            arrayList = fetchVideos.fetchVideos();
+        else
+            arrayList = fetchVideos.fetchVideos(Album);
+        TextView count = requireActivity().findViewById(R.id.count);
+        count.setText(arrayList.size()+ " Videos");
         new Thread(() -> requireActivity().runOnUiThread(() -> {
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             VideosAdapter adapter = new VideosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(),this);
             recyclerView.setAdapter(adapter);
             layoutManager.onRestoreInstanceState(State); //Restore state
-            Log.d("FetchImages(): ", " RecyclerView Adapter attached");
         })
         ).start();
     }

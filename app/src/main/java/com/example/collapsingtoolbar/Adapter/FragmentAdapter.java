@@ -16,26 +16,23 @@ public class FragmentAdapter extends FragmentStateAdapter {
     public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
     }
-
-    AllPhotosFragment photosFragment = new AllPhotosFragment();
-    AllVideosFragment videosFragment = new AllVideosFragment();
-
     @NonNull
     @Override
     public Fragment createFragment(int position) {
 
         switch (position)
         {
-            case 1: return videosFragment;
-            case 2: return photosFragment;
+            case 1: return new AlbumsFragment();
+            case 2: return new AllVideosFragment();
 
         }
 
-        return new AlbumsFragment();
+        return new AllPhotosFragment("");
     }
 
     @Override
     public int getItemCount() {
         return 3;
     }
+
 }

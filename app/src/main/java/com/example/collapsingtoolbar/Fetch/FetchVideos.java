@@ -14,7 +14,7 @@ public class FetchVideos {
 
     Activity activity;
     private static ArrayList<VideoModel> arrayList;
-    private static ArrayList<VideoModel> previousList;
+
 
     private static Uri uri = null;
     private static Cursor cursor;
@@ -27,22 +27,18 @@ public class FetchVideos {
     public FetchVideos(Activity activity) {
         this.activity = activity;
         arrayList = new ArrayList<>();
-        previousList = new ArrayList<>();
     }
 
 
     public ArrayList<VideoModel> fetchVideos() {
-
-        if (!FETCHED || !previousList.equals(arrayList)) {
-            Log.d("FetchVideos()", "fetchVideos: Initiated... ");
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
             projection = new String[]{MediaStore.Video.Media._ID,
                     MediaStore.Video.Media.DURATION};
             orderBy = MediaStore.Video.Media.DEFAULT_SORT_ORDER;
             cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
             column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
+            arrayList.clear();
             while (cursor.moveToNext()) {
-                Log.d("FetchVideos(): ", " Started");
                 long mediaId = cursor.getLong(column_index_data);
                 long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
                 Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
@@ -52,17 +48,11 @@ public class FetchVideos {
                 arrayList.add(videoModel);
             }
             cursor.close();
-            FETCHED = true;
-            previousList = arrayList;
-        }
-        return previousList;
+        return arrayList;
     }
 
 
     public ArrayList<VideoModel> fetchVideos(String Album) {
-
-        if (!FETCHED || !previousList.equals(arrayList)) {
-            Log.d("FetchVideos()", "fetchVideos: Initiated... ");
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
             projection = new String[]{MediaStore.Video.Media._ID
                     ,MediaStore.Video.Media.DURATION
@@ -70,8 +60,8 @@ public class FetchVideos {
             orderBy = MediaStore.Video.Media.DEFAULT_SORT_ORDER;
             cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
             column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
+            arrayList.clear();
             while (cursor.moveToNext()) {
-                Log.d("FetchVideos(): ", " Started");
                 long mediaId = cursor.getLong(column_index_data);
                 name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
                 if (name.equals(Album))
@@ -84,15 +74,7 @@ public class FetchVideos {
                 arrayList.add(videoModel);}
             }
             cursor.close();
-            FETCHED = true;
-            previousList = arrayList;
-        }
-        return previousList;
-    }
-
-
-    public void setFETCHED(Boolean fetched) {
-        FETCHED = fetched;
+        return arrayList;
     }
 }
 

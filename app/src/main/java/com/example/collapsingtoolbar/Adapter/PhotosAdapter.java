@@ -56,7 +56,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
                     .apply(RequestOptions.centerCropTransform())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .into(holder.img);
-            Log.d("FetchImages(): "," Glide Called");
         });
 
 
@@ -64,8 +63,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-       /* view = activity.findViewById(R.id.count);
-        view.setText(arrayList.size()+" Photos");*/
         return arrayList.size();
     }
 

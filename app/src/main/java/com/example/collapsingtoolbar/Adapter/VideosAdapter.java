@@ -60,7 +60,6 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
         int hour = (int) hourX;
 
 
-        Log.d("HMS", "setTime: " + hour + " " + min + " " + sec);
         setTime(sec, min, hour, holder);
 
         activity.runOnUiThread(() -> {
@@ -70,14 +69,11 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
                     .apply(RequestOptions.centerCropTransform())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .into(holder.video);
-            Log.d("FetchVideos(): ", " Glide Called");
         });
     }
 
     @Override
     public int getItemCount() {
-        view = activity.findViewById(R.id.count);
-        view.setText(arrayList.size() + " Videos");
         return arrayList.size();
     }
 

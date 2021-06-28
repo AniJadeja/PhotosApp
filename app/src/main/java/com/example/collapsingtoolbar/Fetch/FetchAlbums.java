@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.example.collapsingtoolbar.Adapter.PhotosAdapter;
 import com.example.collapsingtoolbar.Model.AlbumModel;
 
 import java.util.ArrayList;
@@ -15,9 +16,9 @@ public class FetchAlbums {
 
     public static ArrayList<String> PhotosAlbums;
     public static ArrayList<String> VideosAlbums;
-    public static AlbumModel albumModel;
-    public static ArrayList<AlbumModel> photo = new ArrayList<>();
-    public static ArrayList<AlbumModel> video = new ArrayList<>();
+    private static AlbumModel albumModel;
+    private static final ArrayList<AlbumModel> photo = new ArrayList<>();
+    private static final ArrayList<AlbumModel> video = new ArrayList<>();
 
     private static Uri uri = null;
     private static Uri ThumbURI = null;
@@ -43,6 +44,7 @@ public class FetchAlbums {
         orderBy = MediaStore.Images.Media.DATE_ADDED;
         cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
         photo.clear();
+        PhotosAlbums.clear();
         while (cursor.moveToNext()) {
             name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
             ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
@@ -54,6 +56,11 @@ public class FetchAlbums {
                 photo.add(albumModel);
                 PhotosAlbums.add(name);
             }
+
+            /*if (count!=0 && PhotosAlbums.size() == count)
+            {
+                break;
+            }*/
         }
         cursor.close();
         return photo;
@@ -68,6 +75,7 @@ public class FetchAlbums {
             orderBy = MediaStore.Video.Media.DATE_ADDED;
             cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
             video.clear();
+            VideosAlbums.clear();
             while (cursor.moveToNext()) {
                 name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
                 ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));

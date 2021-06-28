@@ -25,38 +25,17 @@ public class MainActivity extends AppCompatActivity{
 
     CollapsingToolbarLayout collapsingToolbar;
     EditText search;
-    Thread Task;
     ViewPager2 pager2;
     FragmentAdapter adapter;
-    TextView Imagecount;
-    AllPhotosFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Task = new Thread(this::init);
-        Task.start();
-        try { Task.join(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
+        init();
         pager2.setAdapter(adapter);
-
-
-    }
-
-    public void init()
-    {
-        collapsingToolbar = findViewById(R.id.colap_toolbar);
-        final Typeface tf = ResourcesCompat.getFont(MainActivity.this, R.font.odin);
-        collapsingToolbar.setCollapsedTitleTypeface(tf);
-        collapsingToolbar.setExpandedTitleTypeface(tf);
-        search = findViewById(R.id.search);
-        pager2 = findViewById(R.id.frame);
-        adapter = new FragmentAdapter(getSupportFragmentManager(),getLifecycle());
-        Imagecount = findViewById(R.id.count);
-        fragment = new AllPhotosFragment();
-
+        pager2.setCurrentItem(1);
 
 
         pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -67,6 +46,9 @@ public class MainActivity extends AppCompatActivity{
                     collapsingToolbar.setTitle("All Photos");
                 }
                 else if (pager2.getCurrentItem() == 1)
+                {collapsingToolbar.setTitle("Albums");
+                }
+                else if (pager2.getCurrentItem() == 2)
                 {collapsingToolbar.setTitle("All Videos");
                 }
             }
@@ -87,6 +69,19 @@ public class MainActivity extends AppCompatActivity{
             touchSlopField.set(recyclerView, touchSlop * 4);//6 is empirical value
         } catch (Exception ignore) {
         }
+
+    }
+
+    public void init()
+    {
+        collapsingToolbar = findViewById(R.id.colap_toolbar);
+        final Typeface tf = ResourcesCompat.getFont(MainActivity.this, R.font.odin);
+        collapsingToolbar.setCollapsedTitleTypeface(tf);
+        collapsingToolbar.setExpandedTitleTypeface(tf);
+        search = findViewById(R.id.search);
+        pager2 = findViewById(R.id.frame);
+        adapter = new FragmentAdapter(getSupportFragmentManager(),getLifecycle());
+
 
     }
 

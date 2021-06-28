@@ -1,11 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:id="@+id/frameAlbum"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.AlbumPhotos">
 
-</FrameLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/noActivityHeight"
+        android:theme="@style/MyStyle">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/colap_toolbar"
+            style="@style/MyStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:expandedTitleGravity="bottom"
+            app:expandedTitleMarginStart="50dp"
+            app:collapsedTitleGravity="center"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.SmallTitle"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="Album Name" >
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:layout_marginBottom="25dp"
+                android:layout_marginEnd="20dp"
+                android:layout_gravity="bottom"
+                android:contentDescription="@string/recyclerview_images"
+                android:src="@drawable/ic_arrow" />
+
+            <ImageView
+                android:id="@+id/options"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_marginBottom="25dp"
+                android:layout_marginEnd="20dp"
+                android:layout_gravity="bottom|end"
+                android:contentDescription="@string/recyclerview_images"
+                android:src="@drawable/ic_options" />
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                app:titleMarginBottom="20dp"
+               app:navigationIconTint="@color/white"
+                android:paddingEnd="30dp"/>
+
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="35dp"
+            android:textColor="@color/hint"
+            android:textSize="12sp"
+            android:text="Appears"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <FrameLayout
+            android:id="@+id/frameAlbum"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/count">
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
