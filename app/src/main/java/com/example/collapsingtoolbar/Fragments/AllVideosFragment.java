@@ -33,13 +33,13 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     FetchVideos fetchVideos;
     Thread Task;
     Parcelable State;
-    static String Album="";
+    public String Album="FETCH_ALL";
     String TAG = "AllVideosFragment";
 
 
     public AllVideosFragment() {}
     public AllVideosFragment(String Album) {
-        AllVideosFragment.Album = Album;}
+        this.Album = Album;}
 
     @Override
     public void onStart() {
@@ -56,7 +56,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().runOnUiThread(this::fetchImages);
+        requireActivity().runOnUiThread(this::fetchImages);
     }
 
     @Override
@@ -90,9 +90,9 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
 
     @SuppressLint("SetTextI18n")
     private void fetchImages() {
-        if (Album.equals(""))
+   /*     if (Album.equals(""))
             arrayList = fetchVideos.fetchVideos();
-        else
+        else*/
             arrayList = fetchVideos.fetchVideos(Album);
         TextView count = requireActivity().findViewById(R.id.count);
         count.setText(arrayList.size()+ " Videos");
@@ -108,13 +108,10 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
 
     @Override
     public void onClick(int position) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(getActivity(),VideoPlay.class);
-                intent.putExtra("Uri",arrayList.get(position).getUri().toString());
-                startActivity(intent);
-            }
+        requireActivity().runOnUiThread(() -> {
+            Intent intent = new Intent(getActivity(),VideoPlay.class);
+            intent.putExtra("Uri",arrayList.get(position).getUri().toString());
+            startActivity(intent);
         });
 
     }

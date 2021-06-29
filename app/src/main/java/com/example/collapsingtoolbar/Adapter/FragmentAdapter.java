@@ -27,7 +27,7 @@ public class FragmentAdapter extends FragmentStateAdapter {
 
         }
 
-        return new AllPhotosFragment("");
+        return new AllPhotosFragment();
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.example.collapsingtoolbar.Fragments.AllVideosFragment;
 import com.example.collapsingtoolbar.Model.VideoModel;
 
 import java.util.ArrayList;
@@ -30,28 +31,42 @@ public class FetchVideos {
     }
 
 
-    public ArrayList<VideoModel> fetchVideos() {
+    public ArrayList<VideoModel> fetchVideos(String Album) {
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-            projection = new String[]{MediaStore.Video.Media._ID,
+            projection = new String[]{MediaStore.Video.Media._ID
+                    ,MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
                     MediaStore.Video.Media.DURATION};
             orderBy = MediaStore.Video.Media.DEFAULT_SORT_ORDER;
             cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
             column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
             arrayList.clear();
             while (cursor.moveToNext()) {
-                long mediaId = cursor.getLong(column_index_data);
-                long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
-                Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
-                VideoModel videoModel = new VideoModel();
-                videoModel.setDuration(duration);
-                videoModel.setUri(uriMedia);
-                arrayList.add(videoModel);
+                name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+                if (Album.equals("FETCH_ALL"))
+                {
+                    long mediaId = cursor.getLong(column_index_data);
+                    long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+                    Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
+                    VideoModel videoModel = new VideoModel();
+                    videoModel.setDuration(duration);
+                    videoModel.setUri(uriMedia);
+                    arrayList.add(videoModel);
+                }
+                else if (name.equals(Album))
+                {
+                    long mediaId = cursor.getLong(column_index_data);
+                    long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+                    Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
+                    VideoModel videoModel = new VideoModel();
+                    videoModel.setDuration(duration);
+                    videoModel.setUri(uriMedia);
+                    arrayList.add(videoModel);}
             }
             cursor.close();
         return arrayList;
     }
 
-
+/*
     public ArrayList<VideoModel> fetchVideos(String Album) {
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
             projection = new String[]{MediaStore.Video.Media._ID
@@ -75,7 +90,7 @@ public class FetchVideos {
             }
             cursor.close();
         return arrayList;
-    }
+    }*/
 }
 
 

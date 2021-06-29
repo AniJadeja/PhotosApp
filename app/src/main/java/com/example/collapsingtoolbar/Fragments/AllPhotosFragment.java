@@ -37,15 +37,15 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     ArrayList<ImageModel> arrayList;
     FetchImages fetchImages;
     Thread Task;
-    static String Album = "";
-    String TAG = "AllPhotosFragment";
+    public String Album = "FETCH_ALL";
+    String TAG = "Flow AllPhotosFragment";
 
 
     public AllPhotosFragment() {
     }
 
     public AllPhotosFragment(String Album) {
-        AllPhotosFragment.Album = Album;
+        this.Album = Album;
     }
 
     Parcelable State;
@@ -67,7 +67,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().runOnUiThread(this::fetchImages);
+        requireActivity().runOnUiThread(this::fetchImages);
     }
 
     @Override
@@ -98,9 +98,9 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
 
     @SuppressLint("SetTextI18n")
     public void fetchImages() {
-        if (Album.equals(""))
-            arrayList = fetchImages.fetchImages("");
-        else
+     /*   if (Album.equals(""))
+            arrayList = fetchImages.fetchImages();
+        else*/
             arrayList = fetchImages.fetchImages(Album);
         TextView count = requireActivity().findViewById(R.id.count);
         count.setText(arrayList.size()+" Photos");

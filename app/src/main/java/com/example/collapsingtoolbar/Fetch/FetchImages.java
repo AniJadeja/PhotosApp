@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.example.collapsingtoolbar.Fragments.AllPhotosFragment;
 import com.example.collapsingtoolbar.Model.ImageModel;
 import com.example.collapsingtoolbar.Model.VideoModel;
 
@@ -41,7 +42,7 @@ public class FetchImages {
             while (cursor.moveToNext()) {
                 long mediaId = cursor.getLong(column_index_data);
                 name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
-                if (Album.equals(""))
+                if (Album.equals("FETCH_ALL"))
                 {
                 Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
                 ImageModel imageModel = new ImageModel();
