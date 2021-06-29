@@ -98,12 +98,9 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
 
     @SuppressLint("SetTextI18n")
     public void fetchImages() {
-     /*   if (Album.equals(""))
-            arrayList = fetchImages.fetchImages();
-        else*/
-            arrayList = fetchImages.fetchImages(Album);
+        arrayList = fetchImages.fetchImages(Album);
         TextView count = requireActivity().findViewById(R.id.count);
-        count.setText(arrayList.size()+" Photos");
+        count.setText(arrayList.size() + " Photos");
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this);

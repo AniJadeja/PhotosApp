@@ -33,13 +33,16 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     FetchVideos fetchVideos;
     Thread Task;
     Parcelable State;
-    public String Album="FETCH_ALL";
+    public String Album = "FETCH_ALL";
     String TAG = "AllVideosFragment";
 
 
-    public AllVideosFragment() {}
+    public AllVideosFragment() {
+    }
+
     public AllVideosFragment(String Album) {
-        this.Album = Album;}
+        this.Album = Album;
+    }
 
     @Override
     public void onStart() {
@@ -87,19 +90,16 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     }
 
 
-
     @SuppressLint("SetTextI18n")
     private void fetchImages() {
-   /*     if (Album.equals(""))
-            arrayList = fetchVideos.fetchVideos();
-        else*/
-            arrayList = fetchVideos.fetchVideos(Album);
+
+        arrayList = fetchVideos.fetchVideos(Album);
         TextView count = requireActivity().findViewById(R.id.count);
-        count.setText(arrayList.size()+ " Videos");
+        count.setText(arrayList.size() + " Videos");
         new Thread(() -> requireActivity().runOnUiThread(() -> {
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            VideosAdapter adapter = new VideosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(),this);
+            VideosAdapter adapter = new VideosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this);
             recyclerView.setAdapter(adapter);
             layoutManager.onRestoreInstanceState(State); //Restore state
         })
@@ -109,8 +109,8 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     @Override
     public void onClick(int position) {
         requireActivity().runOnUiThread(() -> {
-            Intent intent = new Intent(getActivity(),VideoPlay.class);
-            intent.putExtra("Uri",arrayList.get(position).getUri().toString());
+            Intent intent = new Intent(getActivity(), VideoPlay.class);
+            intent.putExtra("Uri", arrayList.get(position).getUri().toString());
             startActivity(intent);
         });
 

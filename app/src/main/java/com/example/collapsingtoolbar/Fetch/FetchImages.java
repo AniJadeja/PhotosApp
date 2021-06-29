@@ -42,6 +42,10 @@ public class FetchImages {
             while (cursor.moveToNext()) {
                 long mediaId = cursor.getLong(column_index_data);
                 name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+                if (name == null)
+                {
+                    name = "Root";
+                }
                 if (Album.equals("FETCH_ALL"))
                 {
                 Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);

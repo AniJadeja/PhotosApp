@@ -47,6 +47,10 @@ public class FetchAlbums {
         PhotosAlbums.clear();
         while (cursor.moveToNext()) {
             name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+            if (name == null)
+            {
+                name = "Root";
+            }
             ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
             if (!PhotosAlbums.contains(name)) {
                 ThumbURI = Uri.withAppendedPath(uri,""+ID);
@@ -78,6 +82,10 @@ public class FetchAlbums {
             VideosAlbums.clear();
             while (cursor.moveToNext()) {
                 name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
+                if (name == null)
+                {
+                    name = "Root";
+                }
                 ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
                 if (!VideosAlbums.contains(name)){
                     ThumbURI = Uri.withAppendedPath(uri,""+ID);
