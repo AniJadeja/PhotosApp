@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
+    android:background="@color/black"
     app:layout_constraintDimensionRatio="1">
 
     <androidx.cardview.widget.CardView
@@ -12,6 +13,7 @@
         android:layout_height="0dp"
         android:background="@color/black"
         app:cardCornerRadius="5dp"
+        android:backgroundTint="@color/black"
         app:layout_constraintDimensionRatio="1"
         tools:ignore="MissingConstraints">
 

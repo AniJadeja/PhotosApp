@@ -2,7 +2,6 @@ package com.example.collapsingtoolbar.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +26,14 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     ArrayList<ImageModel> arrayList;
     Activity activity;
     OnImageClickListner listner;
+    OnImageLongClickListener longClickListener;
 
-    TextView view;
-    public PhotosAdapter ()
-    {}
-
-    public PhotosAdapter(Context context, ArrayList<ImageModel> arrayList, Activity activity, OnImageClickListner listner) {
+    public PhotosAdapter(Context context, ArrayList<ImageModel> arrayList, Activity activity, OnImageClickListner listner, OnImageLongClickListener longClickListener) {
         this.context = context;
         this.arrayList = arrayList;
         this.activity = activity;
         this.listner = listner;
+        this.longClickListener = longClickListener;
 
     }
 
@@ -44,19 +41,16 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view, parent, false);
-        return new MyViewHolder(view,listner);
+        return new MyViewHolder(view,listner,longClickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        activity.runOnUiThread(() -> {
-            GlideApp.with(context)
-                    .load(arrayList.get(position).getUri())
-                    .apply(RequestOptions.overrideOf(180,180))
-                    .apply(RequestOptions.centerCropTransform())
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .into(holder.img);
-        });
+        activity.runOnUiThread(() -> GlideApp.with(context)
+                .load(arrayList.get(position).getUri())
+                .apply(RequestOptions.overrideOf(180,180))
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .into(holder.img));
 
 
     }
@@ -66,13 +60,16 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
         return arrayList.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
 
         ImageView img;
         OnImageClickListner listner;
-        public MyViewHolder(@NonNull View itemView, OnImageClickListner listner) {
+        OnImageLongClickListener longClickListener;
+        public MyViewHolder(@NonNull View itemView, OnImageClickListner listner,OnImageLongClickListener longClickListener) {
             super(itemView);
             this.listner = listner;
+            this.longClickListener = longClickListener;
+            itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
             img = itemView.findViewById(R.id.img);
 
@@ -82,13 +79,21 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
         public void onClick(View v) {
             listner.onclick(getAdapterPosition());
         }
+
+        @Override
+        public boolean onLongClick(View v) {
+            longClickListener.onLongClick(getAdapterPosition(),v);
+            return  true;
+        }
     }
 
     public  interface  OnImageClickListner{
          void onclick(int position);
     }
 
-
+    public interface OnImageLongClickListener{
+        void onLongClick(int position,View v);
+    }
 
 
 }

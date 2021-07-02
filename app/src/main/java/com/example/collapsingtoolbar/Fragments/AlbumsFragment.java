@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -41,6 +43,15 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     TextView count;
     String TAG = "AlbumsFragment";
 
+
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_albums, container, false);
+    }
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -59,12 +70,7 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
         super.onPause();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
 
-    @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
     @Override
     public void onResume() {
         super.onResume();
@@ -72,73 +78,77 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             count.setText(albums.fetchPhotosAlbums().size()+albums.fetchVideosAlbums().size()+" Albums");
             actionPhotos(true,true);
             actionVideos(true,true);
+            setButton();
 
-            seeAllPhotoAlbums.setOnTouchListener((v, event) ->
-            {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        seeAllPhotoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_dark));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (photoPressed)
-                        {
-                            actionPhotos(true,true);
-                            actionVideos(true,true);
-                            seeAllPhotoAlbums.setText("VIEW ALL");
-                            seeAllPhotoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
-                            photoPressed=false;
-                        }
-                        else if (!photoPressed){
-                        actionPhotos(true,false);
-                        actionVideos(false,false);
+        });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
+    private void setButton() {
+        seeAllPhotoAlbums.setOnTouchListener((v, event) ->
+        {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    seeAllPhotoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_dark));
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (photoPressed) {
+                        actionPhotos(true, true);
+                        actionVideos(true, true);
+                        seeAllPhotoAlbums.setText("VIEW ALL");
+                        seeAllPhotoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+                        photoPressed = false;
+                    } else if (!photoPressed) {
+                        actionPhotos(true, false);
+                        actionVideos(false, false);
                         seeAllPhotoAlbums.setText("HIDE");
                         seeAllPhotoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
                         photoPressed = true;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                return true;
-            });
-
-
-            seeAllVideoAlbums.setOnTouchListener((v, event) ->
-            {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        seeAllVideoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_dark));
-                        break;
-                    case MotionEvent.ACTION_UP:
-
-                        if (videoPressed)
-                        {
-                            actionVideos(true,true);
-                            actionPhotos(true,true);
-                            seeAllVideoAlbums.setText("VIEW ALL");
-                            seeAllVideoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
-                            videoPressed=false;
-                        }
-                        else if (!videoPressed){
-                            actionVideos(true,false);
-
-                            seeAllVideoAlbums.setText("HIDE");
-                            seeAllVideoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
-                            videoPressed = true;
-                        }
-
-                        seeAllVideoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
-                        break;
-                    default:
-                        break;
-                }
-                return true;
-            });
-
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return true;
         });
 
 
+        seeAllVideoAlbums.setOnTouchListener((v, event) ->
+        {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    seeAllVideoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_dark));
+                    break;
+                case MotionEvent.ACTION_UP:
+
+                    if (videoPressed) {
+                        actionVideos(true, true);
+                        actionPhotos(true, true);
+                        seeAllVideoAlbums.setText("VIEW ALL");
+                        seeAllVideoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+                        videoPressed = false;
+                    } else if (!videoPressed) {
+                        actionVideos(true, false);
+
+                        seeAllVideoAlbums.setText("HIDE");
+                        seeAllVideoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+                        videoPressed = true;
+                    }
+
+                    seeAllVideoAlbums.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        });
     }
+
 
     private void init() {
         count = requireActivity().findViewById(R.id.count);
@@ -153,10 +163,7 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_albums, container, false);
-    }
+
 
     @Override
     public void onclick(int position, String type) {
@@ -174,10 +181,10 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             seeAllVideoAlbums.setVisibility(View.GONE);
         } else if (VISIBLE) {
             seeAllVideoAlbums.setText("VIEW ALL");
-            videoPressed= false;
+            videoPressed = false;
             videoX = albums.fetchVideosAlbums();
-            Log.d(TAG, "actionVideos: videoX "+ videoX.size());
-            if (HALF_VISIBLE && videoX.size()>3) {
+            Log.d(TAG, "actionVideos: videoX " + videoX.size());
+            if (HALF_VISIBLE && videoX.size() > 3) {
                 videoX.subList(3, videoX.size()).clear();
             }
             VideosRV.setLayoutManager(new GridLayoutManager(getActivity(), 3));
@@ -197,8 +204,8 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             seeAllPhotoAlbums.setText("VIEW ALL");
             photoPressed = false;
             photoX = albums.fetchPhotosAlbums();
-            Log.d(TAG, "actionPhotos: photoX "+ photoX.size());
-            if (HALF_VISIBLE && photoX.size()>3) {
+            Log.d(TAG, "actionPhotos: photoX " + photoX.size());
+            if (HALF_VISIBLE && photoX.size() > 3) {
                 photoX.subList(3, photoX.size()).clear();
             }
             PhotosRV.setLayoutManager(new GridLayoutManager(getActivity(), 3));

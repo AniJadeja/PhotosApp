@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.collapsingtoolbar.utils.CustomRecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recyclerviewPhotos"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.example.collapsingtoolbar.utils.CustomRecyclerView
+        android:id="@+id/recyclerviewPhotos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/ptoolbar"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/hint"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
 

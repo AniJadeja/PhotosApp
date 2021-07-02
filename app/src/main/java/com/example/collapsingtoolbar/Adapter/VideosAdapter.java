@@ -62,14 +62,14 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
 
         setTime(sec, min, hour, holder);
 
-        activity.runOnUiThread(() -> {
-            GlideApp.with(context)
-                    .load(arrayList.get(position).getUri())
-                    .apply(RequestOptions.overrideOf(180, 180))
-                    .apply(RequestOptions.centerCropTransform())
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .into(holder.video);
-        });
+        Log.d("URI PATH ", "onBindViewHolder: "+arrayList.get(position).getUri().getPath());
+
+        activity.runOnUiThread(() -> GlideApp.with(context)
+                .load(arrayList.get(position).getUri())
+                .apply(RequestOptions.overrideOf(180, 180))
+                .apply(RequestOptions.centerCropTransform())
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .into(holder.video));
     }
 
     @Override

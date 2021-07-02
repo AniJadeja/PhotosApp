@@ -1,6 +1,7 @@
 package com.example.collapsingtoolbar.Activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.collapsingtoolbar.Fragments.AllPhotosFragment;
@@ -24,7 +26,6 @@ import static com.example.collapsingtoolbar.Fragments.AlbumsFragment.VIDEO;
 public class AlbumPhotos extends AppCompatActivity {
 
     String TAG = "AlbumPhotos";
-    MaterialToolbar toolbar;
     CollapsingToolbarLayout collapsingToolbar;
     ImageView back ;
     FragmentManager manager = getSupportFragmentManager();
@@ -34,9 +35,10 @@ public class AlbumPhotos extends AppCompatActivity {
         setContentView(R.layout.activity_album_photos);
         int position = getIntent().getIntExtra("position",0);
         String Type = getIntent().getStringExtra("type");
-        toolbar = findViewById(R.id.toolbar);
         collapsingToolbar = findViewById(R.id.colap_toolbar);
-
+        final Typeface tf = ResourcesCompat.getFont(this, R.font.odin);
+        collapsingToolbar.setCollapsedTitleTypeface(tf);
+        collapsingToolbar.setExpandedTitleTypeface(tf);
         back = findViewById(R.id.back);
         back.setOnClickListener(v -> startActivity(new Intent(AlbumPhotos.this,MainActivity.class)));
         if (Type.equals(VIDEO)){
