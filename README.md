@@ -13,4 +13,5 @@ Pending Optimization.
 - While fragment transition is occuring , next fragment is blank. which can be optimized.
 - Photos and Videos Adapter can be converted to media adpater
 - Photos and Videos fetch can be converted to media fetch
+- put the cycles and recycler adapter inside onViewCreate. This can speed up things.
 
