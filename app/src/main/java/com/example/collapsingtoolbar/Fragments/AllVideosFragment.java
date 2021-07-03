@@ -45,60 +45,52 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Task = new Thread(this::init);
-        Task.start();
-        try {
-            Task.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        requireActivity().runOnUiThread(this::fetchImages);
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         State = layoutManager.onSaveInstanceState(); // Save RecyclerView State
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-
-
-    }
-
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_all_videos, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_all_videos, container, false);
+        Task = new Thread(()->init(view));
+        Task.start();
+        try {
+            Task.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        requireActivity().runOnUiThread(this::fetchVideos);
+        return view;
     }
 
-    void init() {
-        recyclerView = requireView().findViewById(R.id.recyclerviewVideos);
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().runOnUiThread(this::fetchVideos);
+    }
+
+    void init(View view) {
+        recyclerView = view.findViewById(R.id.recyclerviewVideos);
         layoutManager = new GridLayoutManager(getActivity(), 3);
         arrayList = new ArrayList<>();
         fetchVideos = new FetchVideos(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
     }
 
 
     @SuppressLint("SetTextI18n")
-    private void fetchImages() {
+    private void fetchVideos() {
 
         arrayList = fetchVideos.fetchVideos(Album);
         TextView count = requireActivity().findViewById(R.id.count);
         count.setText(arrayList.size() + " Videos");
         new Thread(() -> requireActivity().runOnUiThread(() -> {
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setHasFixedSize(true);
+
             VideosAdapter adapter = new VideosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this);
             recyclerView.setAdapter(adapter);
             layoutManager.onRestoreInstanceState(State); //Restore state

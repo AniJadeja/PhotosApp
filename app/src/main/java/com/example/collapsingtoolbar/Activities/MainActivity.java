@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity{
             e.printStackTrace();
         }
         pager2.setAdapter(adapter);
-        pager2.setCurrentItem(1);
+
         collapsingToolbar.setTitle("Albums");
 
 

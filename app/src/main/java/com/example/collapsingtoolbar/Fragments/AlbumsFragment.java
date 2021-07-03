@@ -3,6 +3,8 @@ package com.example.collapsingtoolbar.Fragments;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -48,32 +50,14 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_albums, container, false);
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        Task = new Thread(this::init);
+       View v = inflater.inflate(R.layout.fragment_albums, container, false);
+        Task = new Thread(()->init(v));
         Task.start();
         try {
             Task.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
         requireActivity().runOnUiThread(() -> {
             count.setText(albums.fetchPhotosAlbums().size()+albums.fetchVideosAlbums().size()+" Albums");
             actionPhotos(true,true);
@@ -81,6 +65,16 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             setButton();
 
         });
+       return v;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        count.setText(albums.fetchPhotosAlbums().size()+albums.fetchVideosAlbums().size()+" Albums");
+        actionPhotos(true,true);
+        actionVideos(true,true);
     }
 
     @Override
@@ -150,16 +144,19 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     }
 
 
-    private void init() {
+    private void init(View view) {
         count = requireActivity().findViewById(R.id.count);
-        PhotosRV = requireView().findViewById(R.id.ImagesAlbum);
-        VideosRV = requireView().findViewById(R.id.VideosAlbum);
+        PhotosRV = view.findViewById(R.id.ImagesAlbum);
+        VideosRV = view.findViewById(R.id.VideosAlbum);
         albums = new FetchAlbums(getActivity());
-        seeAllPhotoAlbums = requireView().findViewById(R.id.AllImageAlbums);
-        seeAllVideoAlbums = requireView().findViewById(R.id.AllVideoAlbums);
-        imageTag = requireView().findViewById(R.id.ImageTag);
-        videoTag = requireView().findViewById(R.id.VideoTag);
-
+        seeAllPhotoAlbums = view.findViewById(R.id.AllImageAlbums);
+        seeAllVideoAlbums = view.findViewById(R.id.AllVideoAlbums);
+        imageTag = view.findViewById(R.id.ImageTag);
+        videoTag = view.findViewById(R.id.VideoTag);
+        VideosRV.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        VideosRV.setHasFixedSize(true);
+        PhotosRV.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        PhotosRV.setHasFixedSize(true);
     }
 
 
@@ -187,7 +184,7 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             if (HALF_VISIBLE && videoX.size() > 3) {
                 videoX.subList(3, videoX.size()).clear();
             }
-            VideosRV.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+
             VideoAdapter = new VideoAlbumAdapter(getContext(), videoX, getActivity(), this);
             VideosRV.setAdapter(VideoAdapter);
             videoTag.setVisibility(View.VISIBLE);
@@ -208,7 +205,7 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             if (HALF_VISIBLE && photoX.size() > 3) {
                 photoX.subList(3, photoX.size()).clear();
             }
-            PhotosRV.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+
             PhotoAdapter = new PhotosAlbumAdapter(getContext(), photoX, getActivity(), this);
             PhotosRV.setAdapter(PhotoAdapter);
             imageTag.setVisibility(View.VISIBLE);

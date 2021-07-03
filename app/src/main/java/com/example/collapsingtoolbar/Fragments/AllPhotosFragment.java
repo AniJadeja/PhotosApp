@@ -60,20 +60,21 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     PhotosAdapter adapter;
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Task = new Thread(this::init);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+       View v = inflater.inflate(R.layout.fragment_all_photos, container, false);
+        Task = new Thread(()->init(v));
         Task.start();
         try {
             Task.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        side = requireView().findViewById(R.id.side);
-
-
+        requireActivity().runOnUiThread(this::fetchImages);
+       return v;
     }
+
+
 
     @Override
     public void onResume() {
@@ -81,23 +82,13 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         requireActivity().runOnUiThread(this::fetchImages);
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            for (String key : savedInstanceState.keySet()) {
-                Log.e("onCreateView Bundle", key + " = \"" + savedInstanceState.get(key) + "\"");
-            }
-        }
-        return inflater.inflate(R.layout.fragment_all_photos, container, false);
-    }
-
-    public void init() {
-        recyclerView = requireView().findViewById(R.id.recyclerviewPhotos);
+    public void init(View v) {
+        recyclerView = v.findViewById(R.id.recyclerviewPhotos);
         layoutManager = new GridLayoutManager(getActivity(), 4);
         fetchImages = new FetchImages(getActivity());
-
-
+        side = v.findViewById(R.id.side);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
     }
 
     @Override
@@ -138,8 +129,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         arrayList = fetchImages.fetchImages(Album);
         TextView count = requireActivity().findViewById(R.id.count);
         count.setText(arrayList.size() + " Photos");
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
+
 //        Objects.requireNonNull(layoutManager.findViewByPosition(0)).setSelected(true);
         adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this, this);
         recyclerView.setAdapter(adapter);
