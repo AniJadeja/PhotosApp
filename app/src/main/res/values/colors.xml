@@ -9,4 +9,5 @@
     <color name="red_dark">#D89C0B00</color>
     <color name="grey">#202020</color>
     <color name="hint">#B3B3B3</color>
+    <color name="black_trans">#BE000000</color>
 </resources>

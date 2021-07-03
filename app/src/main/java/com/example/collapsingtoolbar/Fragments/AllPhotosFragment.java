@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.Selection;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +32,7 @@ import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.CustomRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImageClickListner, PhotosAdapter.OnImageLongClickListener {
@@ -42,8 +46,8 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     public String Album = "FETCH_ALL";
     String TAG = "Flow AllPhotosFragment";
     boolean isSelectionMode = false;
-    Toolbar toolbar;
-
+    CheckBox selection;
+    ConstraintLayout side;
 
     public AllPhotosFragment() {
     }
@@ -66,7 +70,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
             e.printStackTrace();
         }
 
-        toolbar = requireView().findViewById(R.id.ptoolbar);
+        side = requireView().findViewById(R.id.side);
 
 
     }
@@ -107,7 +111,10 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
                 if (isSelectionMode) {
                     //BackPressLogic
                     isSelectionMode = false;
-                    toolbar.setVisibility(View.GONE);
+                    /*  toolbar.animate().alpha(0.0f);*/
+                    side.setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
+                    recyclerView.setAdapter(adapter);
                     Log.d(TAG, "onLongClick: selectionMode " + isSelectionMode);
                     Log.d(TAG, "onLongClick: selectionMode visibility VISIBLE ");
 
@@ -133,6 +140,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         count.setText(arrayList.size() + " Photos");
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
+//        Objects.requireNonNull(layoutManager.findViewByPosition(0)).setSelected(true);
         adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this, this);
         recyclerView.setAdapter(adapter);
         layoutManager.onRestoreInstanceState(State);// Restore State
@@ -140,20 +148,28 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
 
 
     @Override
-    public void onclick(int position) {
+    public void onclick(int position, PhotosAdapter.MyViewHolder holder,CheckBox selection) {
         if (!isSelectionMode) {
             Intent intent = new Intent(getActivity(), FullPhoto.class);
             intent.putExtra("uri", arrayList.get(position).getUri().toString());
             startActivity(intent);
+        } else {
+            this.selection = selection;
+            holder.selection.setVisibility(View.VISIBLE);
+            if (selection.isChecked()){
+                selection.setChecked(false);
+            selection.setVisibility(View.GONE);}
+            else if (!selection.isChecked()) {
+                selection.setVisibility(View.VISIBLE);
+                selection.setChecked(true);
+            }
         }
     }
 
     @Override
     public void onLongClick(int position, View v) {
-
         isSelectionMode = true;
-        toolbar.setVisibility(View.VISIBLE);
-
+        side.setVisibility(View.VISIBLE);
         Log.d(TAG, "onLongClick: selectionMode " + isSelectionMode);
         Log.d(TAG, "onLongClick: selectionMode visibility VISIBLE ");
 
