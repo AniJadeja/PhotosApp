@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.collapsingtoolbar.Activities.AlbumPhotos;
+import com.example.collapsingtoolbar.Adapter.PhotosAdapter;
 import com.example.collapsingtoolbar.Adapter.PhotosAlbumAdapter;
 import com.example.collapsingtoolbar.Adapter.VideoAlbumAdapter;
 import com.example.collapsingtoolbar.Fetch.FetchAlbums;
@@ -31,27 +32,31 @@ import java.util.Objects;
 
 public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlbumClickListner, VideoAlbumAdapter.OnAlbumClickListner {
 
-    PhotosAlbumAdapter PhotoAdapter;
-    VideoAlbumAdapter VideoAdapter;
-    FetchAlbums albums;
-    CustomRecyclerView PhotosRV, VideosRV;
-    ArrayList<AlbumModel> photoX, videoX;
-    TextView seeAllPhotoAlbums, seeAllVideoAlbums, videoTag, imageTag;
+    private static CustomRecyclerView PhotosRV, VideosRV;
+    private static ArrayList<AlbumModel> photoX, videoX;
 
-    boolean photoPressed = false, videoPressed = true;
+    private PhotosAlbumAdapter PhotoAdapter;
+    private VideoAlbumAdapter VideoAdapter;
+    private FetchAlbums albums;
+    private TextView seeAllPhotoAlbums, seeAllVideoAlbums, videoTag, imageTag,count;
+    private Thread Task;
+
+    private static final String TAG = "Flow AlbumsFragment";
     public static final String VIDEO = "Video";
     public static final String IMAGE = "Image";
-    Thread Task;
-    TextView count;
-    String TAG = "AlbumsFragment";
+    private static boolean photoPressed = false, videoPressed = true;
 
 
+    /*===============================================================   CONSTRUCTOR   ===============================================================*/
 
+    public AlbumsFragment(){}
+
+    /*===============================================================   LIFE CYCLE METHODS   ===============================================================*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       View v = inflater.inflate(R.layout.fragment_albums, container, false);
-        Task = new Thread(()->init(v));
+        View v = inflater.inflate(R.layout.fragment_albums, container, false);
+        Task = new Thread(() -> init(v));
         Task.start();
         try {
             Task.join();
@@ -59,28 +64,39 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             e.printStackTrace();
         }
         requireActivity().runOnUiThread(() -> {
-            count.setText(albums.fetchPhotosAlbums().size()+albums.fetchVideosAlbums().size()+" Albums");
-            actionPhotos(true,true);
-            actionVideos(true,true);
+            photoX = albums.fetchInitPhotosAlbums();
+            Log.d(TAG, "onCreateView: received photoX " + photoX.size());
+            PhotoAdapter = new PhotosAlbumAdapter(getContext(), photoX, getActivity(), this);
+            PhotosRV.setAdapter(PhotoAdapter);
+
+            videoX = albums.fetchInitVideosAlbums();
+            VideoAdapter = new VideoAlbumAdapter(getContext(), videoX, getActivity(), this);
+            VideosRV.setAdapter(VideoAdapter);
             setButton();
 
         });
-       return v;
+        return v;
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        count.setText(albums.fetchPhotosAlbums().size()+albums.fetchVideosAlbums().size()+" Albums");
-        actionPhotos(true,true);
-        actionVideos(true,true);
+
+        count.setText(albums.fetchPhotosAlbums().size() + albums.fetchVideosAlbums().size() + " Albums");
+        actionPhotos(true, true);
+        actionVideos(true, true);
+
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
+
     }
+
+    /*===============================================================   UTILITY METHODS   ===============================================================*/
+
 
     @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
     private void setButton() {
@@ -160,17 +176,6 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     }
 
 
-
-
-    @Override
-    public void onclick(int position, String type) {
-        Intent i = new Intent(getActivity(), AlbumPhotos.class);
-        i.putExtra("position", position);
-        i.putExtra("type", type);
-        requireActivity().startActivity(i);
-    }
-
-
     private void actionVideos(boolean VISIBLE, boolean HALF_VISIBLE) {
         if (!VISIBLE) {
             VideosRV.setAdapter(null);
@@ -211,6 +216,16 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             imageTag.setVisibility(View.VISIBLE);
             seeAllPhotoAlbums.setVisibility(View.VISIBLE);
         }
+    }
+
+    /*===============================================================   INTERFACE METHODS   ===============================================================*/
+
+    @Override
+    public void onclick(int position, String type) {
+        Intent i = new Intent(getActivity(), AlbumPhotos.class);
+        i.putExtra("position", position);
+        i.putExtra("type", type);
+        requireActivity().startActivity(i);
     }
 
 }

@@ -17,13 +17,16 @@ public class FetchImages {
 
     Activity activity;
     private static ArrayList<ImageModel> arrayList;
-
     private static Uri uri = null;
     private static Cursor cursor;
     private static int column_index_data;
     private static String[] projection = null;
     private static String orderBy = null;
-    String name;
+    private static String name;
+
+
+
+    private static final String TAG = "Flow FetchImages";
 
     public FetchImages(Activity activity) {
         this.activity = activity;
@@ -49,12 +52,14 @@ public class FetchImages {
             if (Album.equals("FETCH_ALL")) {
                 Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
                 ImageModel imageModel = new ImageModel();
-                imageModel.setUri(uriMedia);
+                imageModel.setUri(uriMedia.toString());
                 arrayList.add(imageModel);
+
+                Log.d(TAG, "fetchImages: callBack arraylist "+arrayList.size());
             } else if (name.equals(Album)) {
                 Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
                 ImageModel imageModel = new ImageModel();
-                imageModel.setUri(uriMedia);
+                imageModel.setUri(uriMedia.toString());
                 arrayList.add(imageModel);
             }
         }
@@ -77,7 +82,7 @@ public class FetchImages {
             long mediaId = cursor.getLong(column_index_data);
             Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
             ImageModel imageModel = new ImageModel();
-            imageModel.setUri(uriMedia);
+            imageModel.setUri(uriMedia.toString());
             arrayList.add(imageModel);
             i++;
             if (i==30)
@@ -86,4 +91,18 @@ public class FetchImages {
         cursor.close();
         return arrayList;
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

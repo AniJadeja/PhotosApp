@@ -2,14 +2,16 @@ package com.example.collapsingtoolbar.Model;
 
 import android.net.Uri;
 
-public class ImageModel {
-    Uri uri;
+import java.io.Serializable;
 
-    public Uri getUri() {
+public class ImageModel implements Serializable {
+    String uri;
+
+    public String getUri() {
         return uri;
     }
 
-    public void setUri(Uri uri) {
+    public void setUri(String uri) {
         this.uri = uri;
     }
 }

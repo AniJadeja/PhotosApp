@@ -22,7 +22,6 @@ public class FetchVideos {
     private static int column_index_data;
     private static String[] projection = null;
     private static String orderBy = null;
-    private static Boolean FETCHED = false;
     private static String name;
 
     public FetchVideos(Activity activity) {
@@ -86,6 +85,7 @@ public class FetchVideos {
                 videoModel.setDuration(duration);
                 videoModel.setUri(uriMedia);
                 arrayList.add(videoModel);
+                i++;
                 if (i==18)
                 {break;}
             }

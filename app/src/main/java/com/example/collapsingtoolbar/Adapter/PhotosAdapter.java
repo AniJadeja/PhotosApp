@@ -2,12 +2,12 @@ package com.example.collapsingtoolbar.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +27,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     ArrayList<ImageModel> arrayList;
     Activity activity;
     OnImageClickListner listner;
-    MyViewHolder holder;
     OnImageLongClickListener longClickListener;
     public PhotosAdapter(Context context, ArrayList<ImageModel> arrayList, Activity activity, OnImageClickListner listner, OnImageLongClickListener longClickListener) {
         this.context = context;
@@ -47,9 +46,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        this.holder = holder;
         activity.runOnUiThread(() -> GlideApp.with(context)
-                .load(arrayList.get(position).getUri())
+                .load(Uri.parse(arrayList.get(position).getUri()))
                 .apply(RequestOptions.overrideOf(130,130))
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .into(holder.img));
@@ -64,7 +62,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
 
-        MyViewHolder holder;
+
         private final ImageView img;
         public CheckBox selection;
         OnImageClickListner listner;
@@ -82,7 +80,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
 
         @Override
         public void onClick(View v) {
-            listner.onclick(getAdapterPosition(),holder,selection);
+            listner.onclick(getAdapterPosition(),selection);
         }
 
         @Override
@@ -93,7 +91,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     }
 
     public  interface  OnImageClickListner{
-         void onclick(int position,MyViewHolder holder,CheckBox selection);
+         void onclick(int position,CheckBox selection);
     }
 
     public interface OnImageLongClickListener{

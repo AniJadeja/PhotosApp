@@ -36,9 +36,9 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     private Thread Task;
     private VideosAdapter adapter;
     private String Album = "FETCH_ALL";
-    private String TAG = "AllVideosFragment";
+    private String TAG = "Flow AllVideosFragment";
 
-    //--------------------------------------------------------------   Constructors   --------------------------------------------------------------//
+    /*===============================================================   CONSTRUCTORS   ===============================================================*/
 
     public AllVideosFragment() {
     }
@@ -47,7 +47,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
         this.Album = Album;
     }
 
-    //--------------------------------------------------------------   Life Cycle Methods   --------------------------------------------------------------//
+    /*===============================================================   LIFE CYCLE METHODS   ===============================================================*/
 
 
     @Override
@@ -80,7 +80,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
         State = layoutManager.onSaveInstanceState(); // Save RecyclerView State
     }
 
-    //--------------------------------------------------------------   Utility Methods   --------------------------------------------------------------//
+    /*===============================================================   UTILITY METHODS   ===============================================================*/
 
     void init(View view) {
         recyclerView = view.findViewById(R.id.recyclerviewVideos);
@@ -109,7 +109,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     }
 
 
-    //--------------------------------------------------------------   Interface Methods   --------------------------------------------------------------//
+    /*===================================================================   INTERFACE METHODS   ====================================================================*/
 
     @Override
     public void onClick(int position) {

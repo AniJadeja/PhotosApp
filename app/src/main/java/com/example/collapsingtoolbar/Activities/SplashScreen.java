@@ -44,11 +44,11 @@ public class SplashScreen extends AppCompatActivity implements Dialog.DialogCall
             if (grantResults.length > 0 && grantResults[0] == 0) {
                 //permissions granted
 
-                new Handler(Looper.getMainLooper()).post(()->{
+                new Handler(Looper.getMainLooper()).postDelayed(()->{
                         startActivity(new Intent(this,MainActivity.class));
                         overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left);
                         finishAffinity();
-                });
+                },200);
 
 
             } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, "android.permission.READ_EXTERNAL_STORAGE")) {
