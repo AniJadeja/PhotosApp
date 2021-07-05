@@ -48,7 +48,7 @@ public class SplashScreen extends AppCompatActivity implements Dialog.DialogCall
                         startActivity(new Intent(this,MainActivity.class));
                         overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left);
                         finishAffinity();
-                },200);
+                },80);
 
 
             } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, "android.permission.READ_EXTERNAL_STORAGE")) {

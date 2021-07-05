@@ -125,7 +125,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     public void init(View v) {
         recyclerView = v.findViewById(R.id.recyclerviewPhotos);
         layoutManager = new GridLayoutManager(getActivity(), 4);
-        fetchImages = new FetchImages(getActivity());
+        fetchImages = new FetchImages(getActivity(),getContext());
         side = v.findViewById(R.id.side);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);

@@ -63,6 +63,7 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        //fetches initial 3 imageAlbums,videoAlbums and shows in recycler view to reduce the load on onCreateView
         requireActivity().runOnUiThread(() -> {
             photoX = albums.fetchInitPhotosAlbums();
             Log.d(TAG, "onCreateView: received photoX " + photoX.size());
@@ -82,11 +83,11 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     @Override
     public void onResume() {
         super.onResume();
-
+        //loads all the albums and saves into arrayList
         count.setText(albums.fetchPhotosAlbums().size() + albums.fetchVideosAlbums().size() + " Albums");
         actionPhotos(true, true);
         actionVideos(true, true);
-
+        //Half visible is a parameter to show only number of albums to screen instead of all the albums.
     }
 
     @Override
@@ -97,9 +98,10 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
 
     /*===============================================================   UTILITY METHODS   ===============================================================*/
 
-
+    //This method detects VIEW ALL button click and expands the album list or collapse it
     @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
     private void setButton() {
+        //This is support method definition to act with View All button for video albums
         seeAllPhotoAlbums.setOnTouchListener((v, event) ->
         {
             switch (event.getAction()) {
@@ -127,7 +129,7 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             return true;
         });
 
-
+        //This is support method definition to act with View All button for video albums
         seeAllVideoAlbums.setOnTouchListener((v, event) ->
         {
             switch (event.getAction()) {

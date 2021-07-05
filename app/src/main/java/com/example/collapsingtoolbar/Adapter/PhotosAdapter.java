@@ -48,7 +48,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         activity.runOnUiThread(() -> GlideApp.with(context)
                 .load(Uri.parse(arrayList.get(position).getUri()))
-                .apply(RequestOptions.overrideOf(130,130))
+                //.load(arrayList.get(position).getBitmap())
+                .apply(RequestOptions.overrideOf(150,150))
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .into(holder.img));
 

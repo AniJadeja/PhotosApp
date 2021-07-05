@@ -104,40 +104,37 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyViewHold
 
 
     private void setTime(int sec, int min, int hour, MyViewHolder holder) {
+        String seco = String.valueOf(sec);
+        String[] secs = seco.split("");
 
+        if (secs.length == 1)
+            seco = "0 " + secs[0];
+        else
+            seco = secs[0]+" "+secs[1];
+
+        String mino = String.valueOf(min);
+        String[] mins = mino.split("");
+
+        if (mins.length == 1)
+            mino = "0 " + mins[0];
+        else
+            mino = mins[0]+" "+mins[1];
 
         if (sec != 0 && min == 0 && hour == 0) {
-            setSec(sec, holder);
-        } else if (sec != 0 && min != 0 && hour == 0) {
-            setSecMin(String.valueOf(sec), String.valueOf(min), holder);
-        } else if (sec == 0 && min != 0 && hour == 0) {
-            String seco = String.valueOf(sec);
-            String[] secs = seco.split("");
+            setSec(seco, holder);
+        }
+        else if (sec != 0 && min != 0 && hour == 0) {
+            setSecMin(seco, mino, holder);
+        }
+        else if (sec == 0 && min != 0 && hour == 0) {
 
-            if (secs.length == 1)
-                seco = "0 " + secs[0];
-            else
-                seco = secs[0]+" "+secs[1];
-
-
-
-
-            String mino = String.valueOf(min);
-            String[] mins = mino.split("");
-
-            if (mins.length == 1)
-                mino = "0 " + mins[0];
-            else
-                mino = mins[0]+" "+mins[1];
-
-
-                setSecMin(seco, mino, holder);
+            setSecMin(seco, mino, holder);
         } else
             holder.time.setText(hour + "  :  " + min + "  :  " + sec);
 
     }
 
-    private void setSec(int sec, MyViewHolder holder) {
+    private void setSec(String sec, MyViewHolder holder) {
         holder.time.setText("0 0 : " + sec);
     }
 
