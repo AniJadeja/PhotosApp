@@ -48,9 +48,7 @@ public class FetchAlbums {
         while (cursor.moveToNext()) {
             name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
             if (name == null)
-            {
-                name = "Root";
-            }
+            { name = "Root"; }
             ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
             if (!PhotosAlbums.contains(name)) {
                 ThumbURI = Uri.withAppendedPath(uri,""+ID);
@@ -60,11 +58,6 @@ public class FetchAlbums {
                 photo.add(albumModel);
                 PhotosAlbums.add(name);
             }
-
-            /*if (count!=0 && PhotosAlbums.size() == count)
-            {
-                break;
-            }*/
         }
         cursor.close();
         return photo;
@@ -83,9 +76,7 @@ public class FetchAlbums {
             while (cursor.moveToNext()) {
                 name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
                 if (name == null)
-                {
-                    name = "Root";
-                }
+                { name = "Root"; }
                 ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
                 if (!VideosAlbums.contains(name)){
                     ThumbURI = Uri.withAppendedPath(uri,""+ID);

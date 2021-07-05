@@ -36,7 +36,7 @@ public class FetchVideos {
             projection = new String[]{MediaStore.Video.Media._ID
                     ,MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
                     MediaStore.Video.Media.DURATION};
-            orderBy = MediaStore.Video.Media.DEFAULT_SORT_ORDER;
+            orderBy = MediaStore.Video.Media.DATE_ADDED;
             cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
             column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
             arrayList.clear();
@@ -70,31 +70,28 @@ public class FetchVideos {
         return arrayList;
     }
 
-/*
-    public ArrayList<VideoModel> fetchVideos(String Album) {
+    public ArrayList<VideoModel> fetchInitVideos() {
+        int i = 0;
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-            projection = new String[]{MediaStore.Video.Media._ID
-                    ,MediaStore.Video.Media.DURATION
-                    ,MediaStore.Video.Media.BUCKET_DISPLAY_NAME};
-            orderBy = MediaStore.Video.Media.DEFAULT_SORT_ORDER;
+            projection = new String[]{MediaStore.Video.Media._ID,MediaStore.Video.Media.DURATION};
+            orderBy = MediaStore.Video.Media.DATE_ADDED;
             cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
             column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
             arrayList.clear();
             while (cursor.moveToNext()) {
                 long mediaId = cursor.getLong(column_index_data);
-                name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
-                if (name.equals(Album))
-                {
                 long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
                 Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
                 VideoModel videoModel = new VideoModel();
                 videoModel.setDuration(duration);
                 videoModel.setUri(uriMedia);
-                arrayList.add(videoModel);}
+                arrayList.add(videoModel);
+                if (i==18)
+                {break;}
             }
             cursor.close();
         return arrayList;
-    }*/
+    }
 }
 
 

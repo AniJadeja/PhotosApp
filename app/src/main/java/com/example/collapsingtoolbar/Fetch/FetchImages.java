@@ -33,57 +33,57 @@ public class FetchImages {
 
     public ArrayList<ImageModel> fetchImages(String Album) {
 
-            uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-            projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-            orderBy = MediaStore.Images.Media.DATE_ADDED;
-            cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
-            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
-            arrayList.clear();
-            while (cursor.moveToNext()) {
-                long mediaId = cursor.getLong(column_index_data);
-                name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
-                if (name == null)
-                {
-                    name = "Root";
-                }
-                if (Album.equals("FETCH_ALL"))
-                {
+        uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+        orderBy = MediaStore.Images.Media.DATE_ADDED;
+        cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
+        arrayList.clear();
+
+        while (cursor.moveToNext()) {
+            long mediaId = cursor.getLong(column_index_data);
+            name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+            if (name == null) {
+                name = "Root";
+            }
+            if (Album.equals("FETCH_ALL")) {
                 Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
                 ImageModel imageModel = new ImageModel();
                 imageModel.setUri(uriMedia);
                 arrayList.add(imageModel);
-                }else if (name.equals(Album))
-                {
-                    Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
-                    ImageModel imageModel = new ImageModel();
-                    imageModel.setUri(uriMedia);
-                    arrayList.add(imageModel);
-                }
+            } else if (name.equals(Album)) {
+                Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
+                ImageModel imageModel = new ImageModel();
+                imageModel.setUri(uriMedia);
+                arrayList.add(imageModel);
             }
-            cursor.close();
+        }
+
+        cursor.close();
+
         return arrayList;
     }
 
 
-/*    public ArrayList<ImageModel> fetchImages(String Album) {
+    public ArrayList<ImageModel> fetchInitImages() {
+        int i = 0;
+        uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+        orderBy = MediaStore.Images.Media.DATE_ADDED;
+        cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
 
-            uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-            projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-            orderBy = MediaStore.Images.Media.DATE_ADDED;
-            cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
-            column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
-
-            while (cursor.moveToNext()) {
-                long mediaId = cursor.getLong(column_index_data);
-                name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
-                if (name.equals(Album)) {
-                    Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
-                    ImageModel imageModel = new ImageModel();
-                    imageModel.setUri(uriMedia);
-                    arrayList.add(imageModel);
-                }
-            }
-            cursor.close();
+        while (cursor.moveToNext()) {
+            long mediaId = cursor.getLong(column_index_data);
+            Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
+            ImageModel imageModel = new ImageModel();
+            imageModel.setUri(uriMedia);
+            arrayList.add(imageModel);
+            i++;
+            if (i==30)
+            {break;}
+        }
+        cursor.close();
         return arrayList;
-    }*/
+    }
 }

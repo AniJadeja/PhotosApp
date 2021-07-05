@@ -38,26 +38,29 @@ import java.util.Objects;
 public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImageClickListner, PhotosAdapter.OnImageLongClickListener {
 
 
-    public static CustomRecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
-    ArrayList<ImageModel> arrayList;
-    FetchImages fetchImages;
-    Thread Task;
-    public String Album = "FETCH_ALL";
-    String TAG = "Flow AllPhotosFragment";
-    boolean isSelectionMode = false;
-    CheckBox selection;
-    ConstraintLayout side;
+    private static CustomRecyclerView recyclerView;
+    private static RecyclerView.LayoutManager layoutManager;
+    private static ArrayList<ImageModel> arrayList;
+    private static Parcelable State;
 
-    public AllPhotosFragment() {
-    }
+    private FetchImages fetchImages;
+    private Thread Task;
+    private ConstraintLayout side;
+    private PhotosAdapter adapter;
+
+    private String Album = "FETCH_ALL";
+    private String TAG = "Flow AllPhotosFragment";
+    private boolean isSelectionMode = false;
+
+    //--------------------------------------------------------------   Constructors   --------------------------------------------------------------//
+
+    public AllPhotosFragment() { }
 
     public AllPhotosFragment(String Album) {
         this.Album = Album;
     }
 
-    Parcelable State;
-    PhotosAdapter adapter;
+    //--------------------------------------------------------------   Life Cycle Methods   --------------------------------------------------------------//
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -70,17 +73,26 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        requireActivity().runOnUiThread(this::fetchImages);
+        requireActivity().runOnUiThread(()->fetchImages(1));
+
        return v;
     }
-
 
 
     @Override
     public void onResume() {
         super.onResume();
-        requireActivity().runOnUiThread(this::fetchImages);
+        setBackPress();
+        requireActivity().runOnUiThread(()->fetchImages(0));
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        State = layoutManager.onSaveInstanceState(); // Save RecyclerView State
+    }
+
+    //--------------------------------------------------------------   Utility Methods   --------------------------------------------------------------//
 
     public void init(View v) {
         recyclerView = v.findViewById(R.id.recyclerviewPhotos);
@@ -91,10 +103,20 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         recyclerView.setHasFixedSize(true);
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    @SuppressLint("SetTextI18n")
+    private void fetchImages(int i) {
+        if (i == 1)
+            arrayList =fetchImages.fetchInitImages();
+        else if(i == 0)
+            arrayList = fetchImages.fetchImages(Album);
+        TextView count = requireActivity().findViewById(R.id.count);
+        count.setText(arrayList.size() + " Photos");
+        adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this, this);
+        recyclerView.setAdapter(adapter);
+        layoutManager.onRestoreInstanceState(State);// Restore State
+    }
 
+    private void setBackPress(){
         requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -102,10 +124,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
                 if (isSelectionMode) {
                     //BackPressLogic
                     isSelectionMode = false;
-                    /*  toolbar.animate().alpha(0.0f);*/
                     side.setVisibility(View.GONE);
-                    adapter.notifyDataSetChanged();
-                    recyclerView.setAdapter(adapter);
                     Log.d(TAG, "onLongClick: selectionMode " + isSelectionMode);
                     Log.d(TAG, "onLongClick: selectionMode visibility VISIBLE ");
 
@@ -117,25 +136,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         });
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        State = layoutManager.onSaveInstanceState(); // Save RecyclerView State
-    }
-
-
-    @SuppressLint("SetTextI18n")
-    public void fetchImages() {
-        arrayList = fetchImages.fetchImages(Album);
-        TextView count = requireActivity().findViewById(R.id.count);
-        count.setText(arrayList.size() + " Photos");
-
-//        Objects.requireNonNull(layoutManager.findViewByPosition(0)).setSelected(true);
-        adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this, this);
-        recyclerView.setAdapter(adapter);
-        layoutManager.onRestoreInstanceState(State);// Restore State
-    }
-
+    //--------------------------------------------------------------   Interface Methods   --------------------------------------------------------------//
 
     @Override
     public void onclick(int position, PhotosAdapter.MyViewHolder holder,CheckBox selection) {
@@ -143,16 +144,6 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
             Intent intent = new Intent(getActivity(), FullPhoto.class);
             intent.putExtra("uri", arrayList.get(position).getUri().toString());
             startActivity(intent);
-        } else {
-            this.selection = selection;
-            holder.selection.setVisibility(View.VISIBLE);
-            if (selection.isChecked()){
-                selection.setChecked(false);
-            selection.setVisibility(View.GONE);}
-            else if (!selection.isChecked()) {
-                selection.setVisibility(View.VISIBLE);
-                selection.setChecked(true);
-            }
         }
     }
 
@@ -162,7 +153,6 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         side.setVisibility(View.VISIBLE);
         Log.d(TAG, "onLongClick: selectionMode " + isSelectionMode);
         Log.d(TAG, "onLongClick: selectionMode visibility VISIBLE ");
-
         Toast.makeText(getActivity(), "onLongCLick " + position, Toast.LENGTH_SHORT).show();
     }
 

@@ -27,15 +27,18 @@ import java.util.ArrayList;
 public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideoClickListner {
 
 
-    CustomRecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
-    ArrayList<VideoModel> arrayList;
-    FetchVideos fetchVideos;
-    Thread Task;
-    Parcelable State;
-    public String Album = "FETCH_ALL";
-    String TAG = "AllVideosFragment";
+    private static CustomRecyclerView recyclerView;
+    private static RecyclerView.LayoutManager layoutManager;
+    private static ArrayList<VideoModel> arrayList;
+    private static Parcelable State;
 
+    private FetchVideos fetchVideos;
+    private Thread Task;
+    private VideosAdapter adapter;
+    private String Album = "FETCH_ALL";
+    private String TAG = "AllVideosFragment";
+
+    //--------------------------------------------------------------   Constructors   --------------------------------------------------------------//
 
     public AllVideosFragment() {
     }
@@ -44,11 +47,8 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
         this.Album = Album;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        State = layoutManager.onSaveInstanceState(); // Save RecyclerView State
-    }
+    //--------------------------------------------------------------   Life Cycle Methods   --------------------------------------------------------------//
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,15 +63,24 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
             e.printStackTrace();
         }
 
-        requireActivity().runOnUiThread(this::fetchVideos);
+        requireActivity().runOnUiThread(()->fetchVideos(1));
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        requireActivity().runOnUiThread(this::fetchVideos);
+        requireActivity().runOnUiThread(()->fetchVideos(0));
     }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        State = layoutManager.onSaveInstanceState(); // Save RecyclerView State
+    }
+
+    //--------------------------------------------------------------   Utility Methods   --------------------------------------------------------------//
 
     void init(View view) {
         recyclerView = view.findViewById(R.id.recyclerviewVideos);
@@ -84,19 +93,23 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
 
 
     @SuppressLint("SetTextI18n")
-    private void fetchVideos() {
-
-        arrayList = fetchVideos.fetchVideos(Album);
+    private void fetchVideos(int i) {
+        if (i==1)
+            arrayList = fetchVideos.fetchInitVideos();
+        else if (i==0)
+            arrayList = fetchVideos.fetchVideos(Album);
         TextView count = requireActivity().findViewById(R.id.count);
         count.setText(arrayList.size() + " Videos");
         new Thread(() -> requireActivity().runOnUiThread(() -> {
-
-            VideosAdapter adapter = new VideosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this);
+            adapter = new VideosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this);
             recyclerView.setAdapter(adapter);
             layoutManager.onRestoreInstanceState(State); //Restore state
         })
         ).start();
     }
+
+
+    //--------------------------------------------------------------   Interface Methods   --------------------------------------------------------------//
 
     @Override
     public void onClick(int position) {

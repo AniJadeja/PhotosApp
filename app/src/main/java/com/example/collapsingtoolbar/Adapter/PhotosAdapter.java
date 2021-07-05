@@ -27,7 +27,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     ArrayList<ImageModel> arrayList;
     Activity activity;
     OnImageClickListner listner;
-    static MyViewHolder holder;
+    MyViewHolder holder;
     OnImageLongClickListener longClickListener;
     public PhotosAdapter(Context context, ArrayList<ImageModel> arrayList, Activity activity, OnImageClickListner listner, OnImageLongClickListener longClickListener) {
         this.context = context;
@@ -50,7 +50,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
         this.holder = holder;
         activity.runOnUiThread(() -> GlideApp.with(context)
                 .load(arrayList.get(position).getUri())
-                .apply(RequestOptions.overrideOf(180,180))
+                .apply(RequestOptions.overrideOf(130,130))
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .into(holder.img));
 
@@ -72,7 +72,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
         public MyViewHolder(@NonNull View itemView, OnImageClickListner listner,OnImageLongClickListener longClickListener) {
             super(itemView);
             this.listner = listner;
-            holder = PhotosAdapter.holder;
             this.longClickListener = longClickListener;
             itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
