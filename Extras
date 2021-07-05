@@ -24,3 +24,30 @@ can be used for reading files....
         }
 
         return ret;*/
+        
+        
+        
+  private void writeToFile(ArrayList<ImageModel> arrayList, String Filename) {
+        try {
+            FileOutputStream outputStreamWriter = getContext().openFileOutput(Filename, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(outputStreamWriter);
+
+            oos.writeObject(arrayList);
+            oos.close();
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    private Object readFromFile(String Filename) {
+
+        try {
+            FileInputStream fis = getContext().openFileInput(Filename);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            Object object = ois.readObject();
+            return object;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
