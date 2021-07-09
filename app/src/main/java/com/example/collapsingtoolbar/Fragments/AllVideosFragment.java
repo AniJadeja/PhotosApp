@@ -55,13 +55,20 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_all_videos, container, false);
-        Task = new Thread(()->init(view));
+
+        //----------------------------   INITIATOR   ----------------------------//
+
+        Task = new Thread(()->init(view));          //init fun is called to initialize all the views.
         Task.start();
         try {
             Task.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+                    //This function tries to read the file and get uris from file so, System won't execute the cycle of fetching all the Albums.
+                    //This will be pre-written uris from last app launch, So, It won't be the heavy task for onCreate.
+                    //fetches initial 3 videos and shows in recycler view to reduce the load on onCreateView
 
         requireActivity().runOnUiThread(()->fetchVideos(1));
         return view;
@@ -82,6 +89,8 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
 
     /*===============================================================   UTILITY METHODS   ===============================================================*/
 
+                //Support method for initializing all the views.
+
     void init(View view) {
         recyclerView = view.findViewById(R.id.recyclerviewVideos);
         layoutManager = new GridLayoutManager(getActivity(), 3);
@@ -91,6 +100,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
         recyclerView.setHasFixedSize(true);
     }
 
+                //Support method fot fetching the videos depending upon i.
 
     @SuppressLint("SetTextI18n")
     private void fetchVideos(int i) {
@@ -110,6 +120,8 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
 
 
     /*===================================================================   INTERFACE METHODS   ====================================================================*/
+
+                //Support method for typical RecyclerViewOnClick event.
 
     @Override
     public void onClick(int position) {

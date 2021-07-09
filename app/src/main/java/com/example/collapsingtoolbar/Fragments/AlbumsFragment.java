@@ -56,14 +56,22 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_albums, container, false);
-        Task = new Thread(() -> init(v));
+
+        //----------------------------   INITIATOR   ----------------------------//
+
+        Task = new Thread(() -> init(v));           //init fun is called to initialize all the views.
         Task.start();
         try {
             Task.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        //fetches initial 3 imageAlbums,videoAlbums and shows in recycler view to reduce the load on onCreateView
+
+
+                    //This function tries to read the file and get uris from file so, System won't execute the cycle of fetching all the Albums.
+                    //This will be pre-written uris from last app launch, So, It won't be the heavy task for onCreate.
+                    //fetches initial 3 imageAlbums,videoAlbums and shows in recycler view to reduce the load on onCreateView
+
         requireActivity().runOnUiThread(() -> {
             photoX = albums.fetchInitPhotosAlbums();
             Log.d(TAG, "onCreateView: received photoX " + photoX.size());
@@ -83,11 +91,15 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     @Override
     public void onResume() {
         super.onResume();
-        //loads all the albums and saves into arrayList
+
+                    //loads all the albums and saves into arrayList
+
         count.setText(albums.fetchPhotosAlbums().size() + albums.fetchVideosAlbums().size() + " Albums");
         actionPhotos(true, true);
         actionVideos(true, true);
-        //Half visible is a parameter to show only number of albums to screen instead of all the albums.
+
+                    //Half visible is a parameter to show only 3 albums to screen instead of all the albums.
+
     }
 
     @Override
@@ -101,7 +113,9 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     //This method detects VIEW ALL button click and expands the album list or collapse it
     @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
     private void setButton() {
-        //This is support method definition to act with View All button for video albums
+
+                    //This is support method definition to act with View All button for video albums
+
         seeAllPhotoAlbums.setOnTouchListener((v, event) ->
         {
             switch (event.getAction()) {
@@ -129,7 +143,8 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             return true;
         });
 
-        //This is support method definition to act with View All button for video albums
+                    //This is support method definition to act with View All button for video albums
+
         seeAllVideoAlbums.setOnTouchListener((v, event) ->
         {
             switch (event.getAction()) {
@@ -162,6 +177,8 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     }
 
 
+                //Support method for initializing all the views.
+
     private void init(View view) {
         count = requireActivity().findViewById(R.id.count);
         PhotosRV = view.findViewById(R.id.ImagesAlbum);
@@ -177,6 +194,7 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
         PhotosRV.setHasFixedSize(true);
     }
 
+                //Support method for hiding and showing all video albums
 
     private void actionVideos(boolean VISIBLE, boolean HALF_VISIBLE) {
         if (!VISIBLE) {
@@ -198,6 +216,8 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             seeAllVideoAlbums.setVisibility(View.VISIBLE);
         }
     }
+
+                //Support method for hiding and showing all Photo albums
 
     private void actionPhotos(boolean VISIBLE, boolean HALF_VISIBLE) {
         if (!VISIBLE) {
@@ -221,6 +241,8 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     }
 
     /*===============================================================   INTERFACE METHODS   ===============================================================*/
+
+                //Support method for typical RecyclerViewOnClick event.
 
     @Override
     public void onclick(int position, String type) {

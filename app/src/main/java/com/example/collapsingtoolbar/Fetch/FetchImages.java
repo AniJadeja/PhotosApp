@@ -117,7 +117,6 @@ public class FetchImages {
 
 
 
-
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(mypath);
