@@ -13,12 +13,18 @@ import com.example.collapsingtoolbar.Fragments.AllVideosFragment;
 public class FragmentAdapter extends FragmentStateAdapter {
 
 
+
+    /*===============================================================   CONSTRUCTOR   ===============================================================*/
+
     public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
     }
+
+    /*===============================================================   OVERRIDEN METHODS   ===============================================================*/
+
     @NonNull
     @Override
-    public Fragment createFragment(int position) {
+    public Fragment createFragment(int position) {          //Choosing which fragment should be returned on the page number.
 
         switch (position)
         {
@@ -33,6 +39,6 @@ public class FragmentAdapter extends FragmentStateAdapter {
     @Override
     public int getItemCount() {
         return 3;
-    }
+    }           //Returning total how many pages are there.
 
 }

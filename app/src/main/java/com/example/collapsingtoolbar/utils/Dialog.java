@@ -13,11 +13,16 @@ public class Dialog {
     AlertDialog dialog;
     Activity activity;
     DialogCallBack callBack;
+
+    /*===============================================================   CONSTRUCTOR   ===============================================================*/
+
     public Dialog(Activity activity) {
         this.activity = activity;
         builder = new AlertDialog.Builder(activity, R.style.MyDialogTheme);
 
     }
+
+    /*===============================================================   UTILITY METHODS   ===============================================================*/
 
     public void set(String title, String message) {
 
@@ -52,6 +57,8 @@ public class Dialog {
         dialog.cancel();
 
     }
+
+    /*===============================================================   INTERFACE METHODS   ===============================================================*/
 
     public void setCallBack(DialogCallBack callBack) {
         this.callBack = callBack;

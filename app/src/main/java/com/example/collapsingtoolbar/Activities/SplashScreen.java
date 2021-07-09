@@ -18,6 +18,9 @@ public class SplashScreen extends AppCompatActivity implements Dialog.DialogCall
 
     Dialog dialog;
     TextView textView;
+
+    /*===============================================================   LIFE-CYCLE METHODS   ===============================================================*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +36,10 @@ public class SplashScreen extends AppCompatActivity implements Dialog.DialogCall
         super.onPause();
     }
 
-    public void askPermission()
+
+    /*===============================================================   UTILITY METHODS   ===============================================================*/
+
+    public void askPermission()         //Requests permissions from the user.
     { ActivityCompat.requestPermissions(SplashScreen.this, new String[]{"android.permission.READ_EXTERNAL_STORAGE"}, 1);}
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -42,22 +48,27 @@ public class SplashScreen extends AppCompatActivity implements Dialog.DialogCall
         if (requestCode == 1) {
 
             if (grantResults.length > 0 && grantResults[0] == 0) {
-                //permissions granted
 
-                new Handler(Looper.getMainLooper()).postDelayed(()->{
+                            //Starting new Activity As the permissions are granted...
+
+                new Handler(Looper.getMainLooper()).post(()->{
                         startActivity(new Intent(this,MainActivity.class));
                         overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left);
                         finishAffinity();
-                },80);
+                });
 
 
             } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, "android.permission.READ_EXTERNAL_STORAGE")) {
-               //perissions denied once
+
+                            //Permissions are denied once so, it is necessary to show dialog again
+
                 dialog.set("Permission Required !!!","In order to work properly Storage Permission is Required");
                 dialog.show("askPermission");
 
             } else {
-                //permissions denied for eternity
+
+                            //Permissions are denied for eternity, so no features depended on the permissions will work.
+
                 dialog.set("Permission Denied !!!","You need to provide the permissions manually in order for the app to work properly...");
                 dialog.show("null");
             }
@@ -65,7 +76,7 @@ public class SplashScreen extends AppCompatActivity implements Dialog.DialogCall
     }
 
     @Override
-    public void choice(int choice) {
+    public void choice(int choice) {            //Interface method to get if user has touched the positive button.
         if (choice == 1)
         {askPermission();}
     }

@@ -15,11 +15,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.collapsingtoolbar.Activities.VideoPlay;
+import com.example.collapsingtoolbar.Adapter.PhotosAdapter;
 import com.example.collapsingtoolbar.Adapter.VideosAdapter;
+import com.example.collapsingtoolbar.Model.ImageModel;
 import com.example.collapsingtoolbar.Model.VideoModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.CustomRecyclerView;
 import com.example.collapsingtoolbar.Fetch.FetchVideos;
+import com.example.collapsingtoolbar.utils.FileManager;
 
 import java.util.ArrayList;
 
@@ -35,6 +38,8 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
     private FetchVideos fetchVideos;
     private Thread Task;
     private VideosAdapter adapter;
+    private FileManager manager;
+
     private String Album = "FETCH_ALL";
     private String TAG = "Flow AllVideosFragment";
 
@@ -58,7 +63,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
 
         //----------------------------   INITIATOR   ----------------------------//
 
-        Task = new Thread(()->init(view));          //init fun is called to initialize all the views.
+        Task = new Thread(() -> init(view));          //init fun is called to initialize all the views.
         Task.start();
         try {
             Task.join();
@@ -66,18 +71,34 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
             e.printStackTrace();
         }
 
-                    //This function tries to read the file and get uris from file so, System won't execute the cycle of fetching all the Albums.
-                    //This will be pre-written uris from last app launch, So, It won't be the heavy task for onCreate.
-                    //fetches initial 3 videos and shows in recycler view to reduce the load on onCreateView
+        //This function tries to read the file and get uris from file so, System won't execute the cycle of fetching all the Albums.
+        //This will be pre-written uris from last app launch, So, It won't be the heavy task for onCreate.
+        //fetches initial 3 videos and shows in recycler view to reduce the load on onCreateView
 
-        requireActivity().runOnUiThread(()->fetchVideos(1));
+        requireActivity().runOnUiThread(() -> {
+
+
+            try {
+
+                arrayList = (ArrayList<VideoModel>) manager.readFromFile();         //Reads from file and stores into arrayList.
+                if (arrayList == null) {
+                    fetchVideos(1);
+                    Log.d(TAG, "onCreateView: Init Fetch ");
+                } else {
+                    adapter = new VideosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(),this);
+                    requireActivity().runOnUiThread(() -> recyclerView.setAdapter(adapter));
+                }
+            } catch (Exception e) {
+                Log.d(TAG, "onCreateView: Exception " + e.toString());
+            }
+        });
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        requireActivity().runOnUiThread(()->fetchVideos(0));
+        requireActivity().runOnUiThread(() -> fetchVideos(0));
     }
 
 
@@ -98,15 +119,18 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
         fetchVideos = new FetchVideos(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
+        manager = new FileManager("InitUris","Videos.arl",getContext());
+        manager.setLogEnabled(true);
     }
 
-                //Support method fot fetching the videos depending upon i.
+    //Support method fot fetching the videos depending upon i.
 
     @SuppressLint("SetTextI18n")
     private void fetchVideos(int i) {
-        if (i==1)
+        if (i == 1){
             arrayList = fetchVideos.fetchInitVideos();
-        else if (i==0)
+            manager.writeToFile(arrayList);}
+        else if (i == 0)
             arrayList = fetchVideos.fetchVideos(Album);
         TextView count = requireActivity().findViewById(R.id.count);
         count.setText(arrayList.size() + " Videos");
@@ -121,7 +145,7 @@ public class AllVideosFragment extends Fragment implements VideosAdapter.OnVideo
 
     /*===================================================================   INTERFACE METHODS   ====================================================================*/
 
-                //Support method for typical RecyclerViewOnClick event.
+    //Support method for typical RecyclerViewOnClick event.
 
     @Override
     public void onClick(int position) {

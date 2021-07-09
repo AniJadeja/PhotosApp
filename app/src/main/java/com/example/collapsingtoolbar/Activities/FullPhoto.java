@@ -23,26 +23,22 @@ public class FullPhoto extends AppCompatActivity {
 
     String TAG = "NewActivity";
     ImageView imageView;
+
+    /*===============================================================   LIFE-CYCLE METHOD   ===============================================================*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_photo);
-        Window window = getWindow();
-        WindowCompat.setDecorFitsSystemWindows(window, false);
 
-        WindowInsetsControllerCompat insetsControllerCompat = new WindowInsetsControllerCompat(window, window.getDecorView());
-       // insetsControllerCompat.systemBarsBehavior = BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE;
-        insetsControllerCompat.hide(systemBars());
-
-
-        String s = getIntent().getStringExtra("uri");
+        String s = getIntent().getStringExtra("uri");           //Gets the uri passed by previous activity
         Log.d(TAG, "onCreate: Got Uri , "+s);
 
         imageView = findViewById(R.id.fullPhoto);
 
         GlideApp.with(getApplicationContext())
                 .load(Uri.parse(s))
-                .into(imageView);
+                .into(imageView);           //Loads the uri in the image view
 
     }
 

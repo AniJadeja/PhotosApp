@@ -28,6 +28,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     Activity activity;
     OnImageClickListner listner;
     OnImageLongClickListener longClickListener;
+
+    /*===============================================================   CONSTRUCTOR   ===============================================================*/
+
     public PhotosAdapter(Context context, ArrayList<ImageModel> arrayList, Activity activity, OnImageClickListner listner, OnImageLongClickListener longClickListener) {
         this.context = context;
         this.arrayList = arrayList;
@@ -37,20 +40,23 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
 
     }
 
+    /*===============================================================   OVERRIDDEN METHODS   ===============================================================*/
+
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {           //This methods returns single_view.xml as a view for RecyclerView.
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view, parent, false);
         return new MyViewHolder(view,listner,longClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {          //Binding the uris with each view depending upon the position of current view.
+
         activity.runOnUiThread(() -> GlideApp.with(context)
                 .load(Uri.parse(arrayList.get(position).getUri()))
                 //.load(arrayList.get(position).getBitmap())
-                .apply(RequestOptions.overrideOf(150,150))
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .apply(RequestOptions.overrideOf(150,150))          //It overrides the value of original image and reduces it to the visible thumbnail size.
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)          //Then it caches the reduced size thumbnail for faster loading speed.
                 .into(holder.img));
 
 
@@ -60,6 +66,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
     public int getItemCount() {
         return arrayList.size();
     }
+
+
+    /*===============================================================   INNER VIEW HOLDER CLASS   ===============================================================*/
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
 
@@ -72,8 +81,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
             super(itemView);
             this.listner = listner;
             this.longClickListener = longClickListener;
-            itemView.setOnLongClickListener(this);
-            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);          //onLongClickListener is set to all of the RecyclerView Items for once rather than setting on each item in BindViewHolder for repeated times
+            itemView.setOnClickListener(this);          //onClickListener is set to all of the RecyclerView Items for once rather than setting on each item in BindViewHolder for repeated times
             img = itemView.findViewById(R.id.img);
             selection = itemView.findViewById(R.id.checkbox);
 
@@ -81,21 +90,21 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHold
 
         @Override
         public void onClick(View v) {
-            listner.onclick(getAdapterPosition(),selection);
+            listner.onclick(getAdapterPosition(),selection);            //Returning the current clicked position and selection checkbox to the implemented method.
         }
 
         @Override
         public boolean onLongClick(View v) {
-            longClickListener.onLongClick(getAdapterPosition(),v);
+            longClickListener.onLongClick(getAdapterPosition(),v);          //Returning the current clicked position and view to the implemented method.
             return  true;
         }
     }
 
-    public  interface  OnImageClickListner{
+    public  interface  OnImageClickListner{         //Interface to generate call back when user clicked an image.
          void onclick(int position,CheckBox selection);
     }
 
-    public interface OnImageLongClickListener{
+    public interface OnImageLongClickListener{          //Interface to generate call back when user long clicked an image.
         void onLongClick(int position,View v);
     }
 

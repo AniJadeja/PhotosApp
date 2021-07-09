@@ -21,26 +21,31 @@ public class VideoPlay extends AppCompatActivity {
     MediaController mediaController;
     ImageView thumbnail;
 
+
+    /*===============================================================   LIFE-CYCLE METHOD   ===============================================================*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_play);
 
 
-        String s = getIntent().getStringExtra("Uri");
+        String s = getIntent().getStringExtra("Uri");           //Getting the uri of the video passed by previous activity
         Log.d(TAG, "onCreate: Got Uri , " + s);
 
         thumbnail = findViewById(R.id.thumbnail);
         GlideApp.with(getApplicationContext())
                 .load(Uri.parse(s))
-                .into(thumbnail);
+                .into(thumbnail);           //Load the uri into thumbnail
         videoView = findViewById(R.id.video);
         videoView.setVideoURI(Uri.parse(s));
 
-        mediaController = new MediaController(this);
+        mediaController = new MediaController(this);            //Media controller is set in order to play and pause the video.
 
 
     }
+
+    /*===============================================================   UTILITY METHOD   ===============================================================*/
 
     public void videoPlay(View view) {
         thumbnail.setVisibility(View.GONE);

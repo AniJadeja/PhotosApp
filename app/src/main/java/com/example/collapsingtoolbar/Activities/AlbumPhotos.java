@@ -29,24 +29,36 @@ public class AlbumPhotos extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbar;
     ImageView back ;
     FragmentManager manager = getSupportFragmentManager();
+
+    /*===============================================================   LIFE0CYCLE METHOD   ===============================================================*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_photos);
-        int position = getIntent().getIntExtra("position",0);
-        String Type = getIntent().getStringExtra("type");
+
+        int position = getIntent().getIntExtra("position",0);           //Getting the position of the clicked view from RecyclerView
+        String Type = getIntent().getStringExtra("type");           //Getting the type of the clicked view from the RecyclerView.
         collapsingToolbar = findViewById(R.id.colap_toolbar);
         final Typeface tf = ResourcesCompat.getFont(this, R.font.odin);
         collapsingToolbar.setCollapsedTitleTypeface(tf);
         collapsingToolbar.setExpandedTitleTypeface(tf);
         back = findViewById(R.id.back);
+
+
         back.setOnClickListener(v -> startActivity(new Intent(AlbumPhotos.this,MainActivity.class)));
         if (Type.equals(VIDEO)){
+
+                        //If the type is video then show the videos fragment
+
             manager.beginTransaction().replace(R.id.frameAlbum, new AllVideosFragment(VideosAlbums.get(position))).commit();
             collapsingToolbar.setTitle(VideosAlbums.get(position));
         }
         else if (Type.equals(IMAGE))
         {
+
+                        //If the type is image then show the images fragment
+
             manager.beginTransaction().replace(R.id.frameAlbum, new AllPhotosFragment(PhotosAlbums.get(position))).commit();
             collapsingToolbar.setTitle(PhotosAlbums.get(position));
         }

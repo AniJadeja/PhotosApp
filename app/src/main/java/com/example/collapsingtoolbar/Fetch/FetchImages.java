@@ -32,9 +32,9 @@ public class FetchImages {
     private static String orderBy = null;
     private static String name;
 
-
-
     private static final String TAG = "Flow FetchImages";
+
+    /*===============================================================   CONSTRUCTOR   ===============================================================*/
 
     public FetchImages(Activity activity, Context context) {
         this.activity = activity;
@@ -42,29 +42,31 @@ public class FetchImages {
         this.context = context;
     }
 
+    /*===============================================================   UTILITY METHODS   ===============================================================*/
+
+                //This method returns all the photos from SharedInternalStorage depending upon the AlbumName
 
     public ArrayList<ImageModel> fetchImages(String Album) {
 
         uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-        orderBy = MediaStore.Images.Media.DATE_ADDED;
+        orderBy = MediaStore.Images.Media.DATE_ADDED;           //Sorting the images by date
         cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
-        arrayList.clear();
-
+        arrayList.clear();          //Before executing or adding the images into list, It is necessary that list is clear to ensure there will be no duplicate entries.
         while (cursor.moveToNext()) {
             long mediaId = cursor.getLong(column_index_data);
 
             name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
             if (name == null) {
-                name = "Root";
+                name = "Root";          //Android returns null for root of the SharedInternal Storage which needs be corrected to root.
             }
-            if (Album.equals("FETCH_ALL")) {
+            if (Album.equals("FETCH_ALL")) {            //If album choice is "FETCH_ALL" it will add images to list regardless of album name.
                 Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
                 ImageModel imageModel = new ImageModel();
                 imageModel.setUri(uriMedia.toString());
                 arrayList.add(imageModel);
-            } else if (name.equals(Album)) {
+            } else if (name.equals(Album)) {            //If album choice is specific it will add images to list only the name of album of image and choice , both are same.
                 Uri uriMedia = Uri.withAppendedPath(uri, "" + mediaId);
                 ImageModel imageModel = new ImageModel();
                 imageModel.setUri(uriMedia.toString());
@@ -78,6 +80,8 @@ public class FetchImages {
     }
 
 
+                //This methods returns first 30 images from recent images.
+
     public ArrayList<ImageModel> fetchInitImages() {
         int i = 0;
         uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
@@ -87,8 +91,6 @@ public class FetchImages {
         orderBy = MediaStore.Images.Media.DATE_ADDED;
         cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
-
-
 
 
         while (cursor.moveToNext()) {
@@ -102,6 +104,10 @@ public class FetchImages {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+
+                        //This portion here generates the bitmap images of the original images which can be loaded faster than original images.
+                        //Generating bitmaps is really an expensive task.
 
             ContextWrapper cw = new ContextWrapper(context);
             // path to /data/data/yourapp/app_data/imageDir

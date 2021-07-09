@@ -20,66 +20,128 @@
         android:clickable="true"
         android:layout_margin="10dp"
         android:focusable="true"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
 
         <ImageView
             android:id="@+id/side_delete"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple"
+            android:layout_height="match_parent"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingEnd="17dp"
+            android:paddingStart="17dp"
             android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toTopOf="@id/bar_delete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/side_crop"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/ic_cut"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/side_delete" />
-
 
         <ImageView
-            android:id="@+id/side_rotate"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/ic_copy"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/side_crop" />
-
-
-        <ImageView
-            android:id="@+id/side_forward"
-            android:layout_width="wrap_content"
+            android:id="@+id/bar_delete"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:src="@drawable/ic_share"
+            android:src="@drawable/white_bar"
+            app:layout_constraintTop_toBottomOf="@id/side_delete"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"/>
+
+
+        <ImageView
+            android:id="@+id/side_move"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_cut"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/side_rotate" />
+            app:layout_constraintBottom_toTopOf="@id/bar_move"
+            app:layout_constraintTop_toBottomOf="@id/bar_delete" />
+
+
+        <ImageView
+            android:id="@+id/bar_move"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/white_bar"
+            app:layout_constraintTop_toBottomOf="@id/side_move"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"/>
+
+
+        <ImageView
+            android:id="@+id/side_copy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_copy"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bar_move" />
+
+        <ImageView
+            android:id="@+id/bar_copy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/white_bar"
+            app:layout_constraintTop_toBottomOf="@id/side_copy"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"/>
+
+
+        <ImageView
+            android:id="@+id/side_share"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_share"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bar_share"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bar_copy" />
+
+        <ImageView
+            android:id="@+id/bar_share"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/white_bar"
+            app:layout_constraintTop_toBottomOf="@id/side_share"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"/>
 
         <ImageView
             android:id="@+id/side_backward"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
             android:src="@drawable/ic_lock"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/side_forward" />
+            app:layout_constraintTop_toBottomOf="@id/bar_share" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

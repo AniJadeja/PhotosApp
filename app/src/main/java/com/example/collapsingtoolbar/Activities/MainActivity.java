@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity{
     FragmentAdapter adapter;
     Thread thread ;
 
-
+    /*===============================================================   LIFE-CYCLE METHODS   ===============================================================*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity{
         collapsingToolbar.setTitle("Albums");
 
 
+                    //Performs assigned operations whenever the page is changed
 
         pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -76,10 +77,8 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
+    /*===============================================================   UTILITY METHODS   ===============================================================*/
+
 
     public void init()
     {
@@ -94,6 +93,8 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+                //This method is to set the viewPager Smooth swipe sensitivity.
+
     private void setFling()
     {
 
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity{
             touchSlopField.setAccessible(true);
 
             final int touchSlop = (int) touchSlopField.get(recyclerView);
-            touchSlopField.set(recyclerView, touchSlop * 4);//6 is empirical value
+            touchSlopField.set(recyclerView, touchSlop * 5);//6 is empirical value
         } catch (Exception ignore) {
         }
     }

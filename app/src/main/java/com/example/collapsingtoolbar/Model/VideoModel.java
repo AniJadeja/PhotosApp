@@ -2,8 +2,10 @@ package com.example.collapsingtoolbar.Model;
 
 import android.net.Uri;
 
-public class VideoModel {
-    Uri uri;
+import java.io.Serializable;
+
+public class VideoModel implements Serializable {           //Implements Serializable in order to serialize the data so it can be stored in internal storage.
+    String uri;         //Uri is stored as string because Uri Class cannot be serialized for saving into localStorage.
     long Duration;
 
     public long getDuration() {
@@ -14,11 +16,11 @@ public class VideoModel {
         Duration = duration;
     }
 
-    public Uri getUri() {
+    public String getUri() {
         return uri;
     }
 
-    public void setUri(Uri uri) {
+    public void setUri(String uri) {
         this.uri = uri;
     }
 }
