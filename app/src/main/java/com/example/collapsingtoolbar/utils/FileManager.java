@@ -46,7 +46,7 @@ public class FileManager {
     /*===============================================================   UTILITY METHODS   ===============================================================*/
 
 
-    public void writeToFile(ArrayList<?> arrayList) {
+    public void writeToFile(Object object) {
 
         //Create a Dir if it doesn't exists
 
@@ -71,7 +71,7 @@ public class FileManager {
 
             FileOutputStream outputStreamWriter = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(outputStreamWriter);
-            oos.writeObject(arrayList);
+            oos.writeObject(object);
             oos.close();
             outputStreamWriter.close();
             if (isLogEnabled)
@@ -82,12 +82,12 @@ public class FileManager {
         }
     }
 
-    public ArrayList<?> readFromFile() {
+    public Object readFromFile() {
 
         try {
             FileInputStream fis = new FileInputStream(new File(context.getExternalFilesDir(null).getAbsolutePath() + "/" + dirName + "/" + fileName));
             ObjectInputStream ois = new ObjectInputStream(fis);
-            return (ArrayList<?>) ois.readObject();
+            return ois.readObject();
         } catch (Exception ex) {
             if (isLogEnabled)
                 Log.d(TAG, "readFromFile: exception " + ex.toString());
