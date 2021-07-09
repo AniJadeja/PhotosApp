@@ -31,6 +31,7 @@ import com.example.collapsingtoolbar.Fetch.FetchImages;
 import com.example.collapsingtoolbar.Model.ImageModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.CustomRecyclerView;
+import com.example.collapsingtoolbar.utils.FileManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,6 +55,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     private Thread Task;
     private ConstraintLayout side;
     private PhotosAdapter adapter;
+    private FileManager manager;
 
     private String Album = "FETCH_ALL";
     private String TAG = "Flow AllPhotosFragment";
@@ -84,11 +86,12 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
             e.printStackTrace();
         }
 
-
+        manager = new FileManager("Hello","Images.arl",requireContext());
+        manager.setLogEnabled(true);
         requireActivity().runOnUiThread(()->{
             try {
 
-                arrayList = readFromFile("Images.arl");         //Reads from file and stores into arrayList.
+                arrayList = (ArrayList<ImageModel>) manager.readFromFile();         //Reads from file and stores into arrayList.
                 if (arrayList == null)
                 {
                     fetchImages(1);
@@ -156,7 +159,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     private void fetchImages(int i) {
         if (i == 1){
             arrayList =fetchImages.fetchInitImages();
-            writeToFile(arrayList,"Images.arl");
+            manager.writeToFile(arrayList);
             }
         else if(i == 0)
             arrayList = fetchImages.fetchImages(Album);
@@ -203,53 +206,53 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
                 //Support fun for writing uris into the file.
 
 
-    private void writeToFile(ArrayList<ImageModel> arrayList, String filename) {
-
-                    //Create a Dir if it doesn't exists
-
-        File Dir = new File(requireContext().getExternalFilesDir(null).getAbsolutePath() + "/Hello");
-        if(!Dir.exists()){
-            boolean y= Dir.mkdirs();
-            if (y)
-                Log.d(TAG, "writeToFile: directory creation successful ");
-            else
-                Log.d(TAG, "writeToFile: directory creation unsuccessful ");
-        }
-
-                    //Create a new file every time so, no data will be appended and all the data will be overwritten.
-
-        File file = new File(requireContext().getExternalFilesDir(null).getAbsolutePath() +"/"+Dir.getName()+"/"+filename);
-
-        try {
-
-                        //Write arrayList to the file.
-
-            FileOutputStream outputStreamWriter = new FileOutputStream(file);
-            ObjectOutputStream oos = new ObjectOutputStream(outputStreamWriter);
-            oos.writeObject(arrayList);
-            oos.close();
-            outputStreamWriter.close();
-            Log.d(TAG, "writeToFile: file Write successful ");
-        } catch (IOException e) {
-            Log.e(TAG, "Exception : File write failed : " + e.toString());
-        }
-    }
-
-                //Support fun for reading uris from file.
-
-    private ArrayList<ImageModel> readFromFile(String filename) {
-
-        try {
-            FileInputStream fis = new FileInputStream(new File(requireContext().getExternalFilesDir(null).getAbsolutePath() +"/"+"Hello"+"/"+filename));
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            // Log.d(TAG, "readFromFile: object "+ object);
-
-            return (ArrayList<ImageModel>) ois.readObject();
-        } catch (Exception ex) {
-            Log.d(TAG, "readFromFile: exception "+ex.toString());
-            return null;
-        }
-    }
+//    private void writeToFile(String dirName, String filename, ArrayList<ImageModel> arrayList) {
+//
+//                    //Create a Dir if it doesn't exists
+//
+//        File Dir = new File(requireContext().getExternalFilesDir(null).getAbsolutePath() + "/"+dirName);
+//        if(!Dir.exists()){
+//            boolean y= Dir.mkdirs();
+//            if (y)
+//                Log.d(TAG, "writeToFile: directory creation successful ");
+//            else
+//                Log.d(TAG, "writeToFile: directory creation unsuccessful ");
+//        }
+//
+//                    //Create a new file every time so, no data will be appended and all the data will be overwritten.
+//
+//        File file = new File(requireContext().getExternalFilesDir(null).getAbsolutePath() +"/"+Dir.getName()+"/"+filename);
+//
+//        try {
+//
+//                        //Write arrayList to the file.
+//
+//            FileOutputStream outputStreamWriter = new FileOutputStream(file);
+//            ObjectOutputStream oos = new ObjectOutputStream(outputStreamWriter);
+//            oos.writeObject(arrayList);
+//            oos.close();
+//            outputStreamWriter.close();
+//            Log.d(TAG, "writeToFile: file Write successful ");
+//        } catch (IOException e) {
+//            Log.e(TAG, "Exception : File write failed : " + e.toString());
+//        }
+//    }
+//
+//                //Support fun for reading uris from file.
+//
+//    private ArrayList<ImageModel> readFromFile(String dirName,String filename) {
+//
+//        try {
+//            FileInputStream fis = new FileInputStream(new File(requireContext().getExternalFilesDir(null).getAbsolutePath() +"/"+dirName+"/"+filename));
+//            ObjectInputStream ois = new ObjectInputStream(fis);
+//            // Log.d(TAG, "readFromFile: object "+ object);
+//
+//            return (ArrayList<ImageModel>) ois.readObject();
+//        } catch (Exception ex) {
+//            Log.d(TAG, "readFromFile: exception "+ex.toString());
+//            return null;
+//        }
+//    }
 
     /*====================================================================   INTERFACE METHODS   ====================================================================*/
 
