@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -24,8 +25,10 @@ import com.example.collapsingtoolbar.Adapter.PhotosAlbumAdapter;
 import com.example.collapsingtoolbar.Adapter.VideoAlbumAdapter;
 import com.example.collapsingtoolbar.Fetch.FetchAlbums;
 import com.example.collapsingtoolbar.Model.AlbumModel;
+import com.example.collapsingtoolbar.Model.ImageModel;
 import com.example.collapsingtoolbar.R;
 import com.example.collapsingtoolbar.utils.CustomRecyclerView;
+import com.example.collapsingtoolbar.utils.FileManager;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -40,6 +43,7 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     private FetchAlbums albums;
     private TextView seeAllPhotoAlbums, seeAllVideoAlbums, videoTag, imageTag,count;
     private Thread Task;
+    private FileManager manager;
 
     private static final String TAG = "Flow AlbumsFragment";
     public static final String VIDEO = "Video";
@@ -73,17 +77,54 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
                     //fetches initial 3 imageAlbums,videoAlbums and shows in recycler view to reduce the load on onCreateView
 
         requireActivity().runOnUiThread(() -> {
-            photoX = albums.fetchInitPhotosAlbums();
-            Log.d(TAG, "onCreateView: received photoX " + photoX.size());
-            PhotoAdapter = new PhotosAlbumAdapter(getContext(), photoX, getActivity(), this);
-            PhotosRV.setAdapter(PhotoAdapter);
 
-            videoX = albums.fetchInitVideosAlbums();
-            VideoAdapter = new VideoAlbumAdapter(getContext(), videoX, getActivity(), this);
-            VideosRV.setAdapter(VideoAdapter);
-            setButton();
+
+
+
+            try {
+
+                photoX = (ArrayList<AlbumModel>) manager.readFromFile("photoAlbums.arl");         //Reads from file and stores into arrayList.
+                if (photoX == null)
+                {
+                    photoX = albums.fetchInitPhotosAlbums();
+                    manager.writeToFile("photoAlbums.arl",photoX);
+                    Log.d(TAG, "onCreateView: Init Fetch ");
+                }
+                else {
+                    PhotoAdapter = new PhotosAlbumAdapter(requireActivity().getApplicationContext(), photoX, getActivity(), this);
+                    requireActivity().runOnUiThread(()->PhotosRV.setAdapter(PhotoAdapter));
+                }
+            }
+            catch (Exception e)
+            {
+                Log.d(TAG, "onCreateView: Exception "+e.toString());
+            }
+
+
+
+        try {
+
+               videoX = (ArrayList<AlbumModel>) manager.readFromFile("videoAlbums.arl");         //Reads from file and stores into arrayList.
+                if (videoX == null)
+                {
+                    videoX = albums.fetchInitVideosAlbums();
+                    manager.writeToFile("videoAlbums.arl",videoX);
+                    Log.d(TAG, "onCreateView: Init Fetch ");
+                }
+                else {
+                    VideoAdapter = new VideoAlbumAdapter(requireActivity().getApplicationContext(), videoX, getActivity(), this);
+                    requireActivity().runOnUiThread(()->VideosRV.setAdapter(VideoAdapter));
+                }
+            }
+            catch (Exception e)
+            {
+                Log.d(TAG, "onCreateView: Exception "+e.toString());
+            }
 
         });
+            setButton();
+
+
         return v;
     }
 
@@ -110,9 +151,36 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
 
     /*===============================================================   UTILITY METHODS   ===============================================================*/
 
+
+
+
+    //Support method for initializing all the views.
+
+    private void init(View view) {
+        count = requireActivity().findViewById(R.id.count);
+        PhotosRV = view.findViewById(R.id.ImagesAlbum);
+        VideosRV = view.findViewById(R.id.VideosAlbum);
+        albums = new FetchAlbums(getActivity());
+        manager = new FileManager("InitUris",requireContext());
+        manager.setLogEnabled(true);
+        seeAllPhotoAlbums = view.findViewById(R.id.AllImageAlbums);
+        seeAllVideoAlbums = view.findViewById(R.id.AllVideoAlbums);
+        imageTag = view.findViewById(R.id.ImageTag);
+        videoTag = view.findViewById(R.id.VideoTag);
+        VideosRV.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        VideosRV.setHasFixedSize(true);
+        PhotosRV.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        PhotosRV.setHasFixedSize(true);
+    }
+
+
+
+
+
     //This method detects VIEW ALL button click and expands the album list or collapse it
     @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
     private void setButton() {
+
 
                     //This is support method definition to act with View All button for video albums
 
@@ -177,23 +245,6 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
     }
 
 
-                //Support method for initializing all the views.
-
-    private void init(View view) {
-        count = requireActivity().findViewById(R.id.count);
-        PhotosRV = view.findViewById(R.id.ImagesAlbum);
-        VideosRV = view.findViewById(R.id.VideosAlbum);
-        albums = new FetchAlbums(getActivity());
-        seeAllPhotoAlbums = view.findViewById(R.id.AllImageAlbums);
-        seeAllVideoAlbums = view.findViewById(R.id.AllVideoAlbums);
-        imageTag = view.findViewById(R.id.ImageTag);
-        videoTag = view.findViewById(R.id.VideoTag);
-        VideosRV.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        VideosRV.setHasFixedSize(true);
-        PhotosRV.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        PhotosRV.setHasFixedSize(true);
-    }
-
                 //Support method for hiding and showing all video albums
 
     private void actionVideos(boolean VISIBLE, boolean HALF_VISIBLE) {
@@ -211,7 +262,7 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             }
 
             VideoAdapter = new VideoAlbumAdapter(getContext(), videoX, getActivity(), this);
-            VideosRV.setAdapter(VideoAdapter);
+            VideosRV.swapAdapter(VideoAdapter,false);
             videoTag.setVisibility(View.VISIBLE);
             seeAllVideoAlbums.setVisibility(View.VISIBLE);
         }
@@ -234,7 +285,7 @@ public class AlbumsFragment extends Fragment implements PhotosAlbumAdapter.OnAlb
             }
 
             PhotoAdapter = new PhotosAlbumAdapter(getContext(), photoX, getActivity(), this);
-            PhotosRV.setAdapter(PhotoAdapter);
+            PhotosRV.swapAdapter(PhotoAdapter,false);
             imageTag.setVisibility(View.VISIBLE);
             seeAllPhotoAlbums.setVisibility(View.VISIBLE);
         }

@@ -2,7 +2,9 @@ package com.example.collapsingtoolbar.Model;
 
 import android.net.Uri;
 
-public class AlbumModel {
+import java.io.Serializable;
+
+public class AlbumModel implements Serializable {
     String AlbumName;
 
     public String getAlbumName() {
@@ -13,13 +15,13 @@ public class AlbumModel {
         AlbumName = albumName;
     }
 
-    public Uri getThumbURI() {
+    public String getThumbURI() {
         return ThumbURI;
     }
 
-    public void setThumbURI(Uri thumbURI) {
+    public void setThumbURI(String thumbURI) {
         ThumbURI = thumbURI;
     }
 
-    Uri ThumbURI;
+    String ThumbURI;
 }

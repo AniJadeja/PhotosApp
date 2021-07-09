@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import androidx.core.view.TintableBackgroundView;
+
 import com.example.collapsingtoolbar.Adapter.PhotosAdapter;
 import com.example.collapsingtoolbar.Model.AlbumModel;
 
@@ -22,7 +24,7 @@ public class FetchAlbums {
 
     private static Uri uri = null;
     private static Uri ThumbURI = null;
-    private static long ID ;
+    private static long ID;
     private static Cursor cursor;
     private static String[] projection = null;
     private static String orderBy = null;
@@ -34,26 +36,27 @@ public class FetchAlbums {
         this.activity = activity;
         PhotosAlbums = new ArrayList<>();
         VideosAlbums = new ArrayList<>();
-        albumModel =  new AlbumModel();
+        albumModel = new AlbumModel();
     }
 
     public ArrayList<AlbumModel> fetchPhotosAlbums() {
         uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         projection = new String[]{MediaStore.Images.Media._ID
-                ,MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+                , MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
         orderBy = MediaStore.Images.Media.DATE_ADDED;
         cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
         photo.clear();
         PhotosAlbums.clear();
         while (cursor.moveToNext()) {
             name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
-            if (name == null)
-            { name = "Root"; }
+            if (name == null) {
+                name = "Root";
+            }
             ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
             if (!PhotosAlbums.contains(name)) {
-                ThumbURI = Uri.withAppendedPath(uri,""+ID);
-                albumModel =  new AlbumModel();
-                albumModel.setThumbURI(ThumbURI);
+                ThumbURI = Uri.withAppendedPath(uri, "" + ID);
+                albumModel = new AlbumModel();
+                albumModel.setThumbURI(ThumbURI.toString());
                 albumModel.setAlbumName(name);
                 photo.add(albumModel);
                 PhotosAlbums.add(name);
@@ -65,30 +68,30 @@ public class FetchAlbums {
 
     public ArrayList<AlbumModel> fetchInitPhotosAlbums() {
         int i = 0;
+
         uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         projection = new String[]{MediaStore.Images.Media._ID
-                ,MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+                , MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
         orderBy = MediaStore.Images.Media.DATE_ADDED;
         cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
         photo.clear();
         PhotosAlbums.clear();
         while (cursor.moveToNext()) {
             name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
-            if (name == null)
-            { name = "Root"; }
+            if (name == null) {
+                name = "Root";
+            }
             ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
             if (!PhotosAlbums.contains(name)) {
-                ThumbURI = Uri.withAppendedPath(uri,""+ID);
-                albumModel =  new AlbumModel();
-                albumModel.setThumbURI(ThumbURI);
+                ThumbURI = Uri.withAppendedPath(uri, "" + ID);
+                albumModel = new AlbumModel();
+                albumModel.setThumbURI(ThumbURI.toString());
                 albumModel.setAlbumName(name);
                 photo.add(albumModel);
                 PhotosAlbums.add(name);
                 i++;
             }
-
-            Log.d(TAG, "fetchInitPhotosAlbums: i "+i);
-            if (i==3)
+            if (i == 3)
                 break;
         }
         cursor.close();
@@ -98,33 +101,35 @@ public class FetchAlbums {
 
     public ArrayList<AlbumModel> fetchInitVideosAlbums() {
         int i = 0;
-            uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-            projection = new String[]{
-                    MediaStore.Video.Media._ID,
-                    MediaStore.Video.Media.BUCKET_DISPLAY_NAME};
-            orderBy = MediaStore.Video.Media.DATE_ADDED;
-            cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
-            video.clear();
-            VideosAlbums.clear();
-            while (cursor.moveToNext()) {
-                name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
-                if (name == null)
-                { name = "Root"; }
-                ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
-                if (!VideosAlbums.contains(name)){
-                    ThumbURI = Uri.withAppendedPath(uri,""+ID);
-                    AlbumModel albumModel = new AlbumModel();
-                    albumModel.setAlbumName(name);
-                    albumModel.setThumbURI(ThumbURI);
-                    video.add(albumModel);
-                    VideosAlbums.add(name);
-                    i++;
-                }
-
-                if (i==3)
-                    break;
+        uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        projection = new String[]{
+                MediaStore.Video.Media._ID,
+                MediaStore.Video.Media.BUCKET_DISPLAY_NAME};
+        orderBy = MediaStore.Video.Media.DATE_ADDED;
+        cursor = activity.getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
+        video.clear();
+        VideosAlbums.clear();
+        while (cursor.moveToNext()) {
+            name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
+            if (name == null) {
+                name = "Root";
             }
-            cursor.close();
+            ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
+            if (!VideosAlbums.contains(name)) {
+                ThumbURI = Uri.withAppendedPath(uri, "" + ID);
+                AlbumModel albumModel = new AlbumModel();
+                albumModel.setAlbumName(name);
+                albumModel.setThumbURI(ThumbURI.toString());
+                video.add(albumModel);
+                VideosAlbums.add(name);
+                i++;
+            }
+
+            if (i == 3)
+                break;
+
+        }
+        cursor.close();
         return video;
     }
 
@@ -140,14 +145,15 @@ public class FetchAlbums {
         VideosAlbums.clear();
         while (cursor.moveToNext()) {
             name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
-            if (name == null)
-            { name = "Root"; }
+            if (name == null) {
+                name = "Root";
+            }
             ID = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID));
-            if (!VideosAlbums.contains(name)){
-                ThumbURI = Uri.withAppendedPath(uri,""+ID);
+            if (!VideosAlbums.contains(name)) {
+                ThumbURI = Uri.withAppendedPath(uri, "" + ID);
                 AlbumModel albumModel = new AlbumModel();
                 albumModel.setAlbumName(name);
-                albumModel.setThumbURI(ThumbURI);
+                albumModel.setThumbURI(ThumbURI.toString());
                 video.add(albumModel);
                 VideosAlbums.add(name);
             }

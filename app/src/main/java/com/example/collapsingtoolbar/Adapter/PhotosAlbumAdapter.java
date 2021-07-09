@@ -3,6 +3,7 @@ package com.example.collapsingtoolbar.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +50,7 @@ public class PhotosAlbumAdapter extends RecyclerView.Adapter<PhotosAlbumAdapter.
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.duration.setText(setName(arrayListX.get(position).getAlbumName()));
         GlideApp.with(context)
-                .load(arrayListX.get(position).getThumbURI())
+                .load(Uri.parse(arrayListX.get(position).getThumbURI()))
                 .into(holder.img);
     }
 

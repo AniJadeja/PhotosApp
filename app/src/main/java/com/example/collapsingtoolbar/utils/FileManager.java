@@ -46,6 +46,9 @@ public class FileManager {
     /*===============================================================   UTILITY METHODS   ===============================================================*/
 
 
+
+    //--------------------------------------------  Data Focused Methods  --------------------------------------------//
+
     public void writeToFile(Object object) {
 
         //Create a Dir if it doesn't exists
@@ -83,6 +86,59 @@ public class FileManager {
     }
 
     public Object readFromFile() {
+
+        try {
+            FileInputStream fis = new FileInputStream(new File(context.getExternalFilesDir(null).getAbsolutePath() + "/" + dirName + "/" + fileName));
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            return ois.readObject();
+        } catch (Exception ex) {
+            if (isLogEnabled)
+                Log.d(TAG, "readFromFile: exception " + ex.toString());
+            return null;
+        }
+    }
+
+
+    //--------------------------------------------  FileName ,Data Focused Methods  --------------------------------------------//
+
+
+    public void writeToFile(String fileName, Object object) {
+
+        //Create a Dir if it doesn't exists
+
+        File Dir = new File(context.getExternalFilesDir(null).getAbsolutePath() + "/" + dirName);
+        if (!Dir.exists()) {
+            boolean y = Dir.mkdirs();
+            if (isLogEnabled) {
+                if (y)
+                    Log.d(TAG, "writeToFile: directory creation successful ");
+                else
+                    Log.d(TAG, "writeToFile: directory creation unsuccessful ");
+            }
+        }
+
+        //Create a new file every time so, no data will be appended and all the data will be overwritten.
+
+        File file = new File(context.getExternalFilesDir(null).getAbsolutePath() + "/" + Dir.getName() + "/" + fileName);
+
+        try {
+
+            //Write Data to the file.
+
+            FileOutputStream outputStreamWriter = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(outputStreamWriter);
+            oos.writeObject(object);
+            oos.close();
+            outputStreamWriter.close();
+            if (isLogEnabled)
+                Log.d(TAG, "writeToFile: file Write successful ");
+        } catch (IOException e) {
+            if (isLogEnabled)
+                Log.e(TAG, "Exception : File write failed : " + e.toString());
+        }
+    }
+
+    public Object readFromFile(String fileName) {
 
         try {
             FileInputStream fis = new FileInputStream(new File(context.getExternalFilesDir(null).getAbsolutePath() + "/" + dirName + "/" + fileName));

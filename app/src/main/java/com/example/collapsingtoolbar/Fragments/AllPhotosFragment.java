@@ -58,7 +58,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
     private FileManager manager;
 
     private String Album = "FETCH_ALL";
-    private String TAG = "Flow AllPhotosFragment";
+    private final String TAG = "Flow AllPhotosFragment";
     private boolean isSelectionMode = false;
 
     /*===============================================================   CONSTRUCTORS   ===============================================================*/
@@ -86,8 +86,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
             e.printStackTrace();
         }
 
-        manager = new FileManager("Hello","Images.arl",requireContext());
-        manager.setLogEnabled(true);
+
         requireActivity().runOnUiThread(()->{
             try {
 
@@ -100,18 +99,7 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
                 else {
                     adapter = new PhotosAdapter(requireActivity().getApplicationContext(), arrayList, getActivity(), this, this);
                     requireActivity().runOnUiThread(()->recyclerView.setAdapter(adapter));
-
-                    Log.d(TAG, "onCreateView: ReadFile "+arrayList.size());
-                    for (int i = 0; i<arrayList.size();i++)
-                    {
-                        Log.d(TAG, "onCreateView: uris "+arrayList.get(i).toString());
-                    }
-                    Log.d(TAG, "onCreateView: loaded from uris ");
                 }
-
-
-
-
             }
             catch (Exception e)
             {
@@ -151,6 +139,8 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
         side = v.findViewById(R.id.side);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
+        manager = new FileManager("InitUris","Images.arl",requireContext());
+        manager.setLogEnabled(true);
     }
 
                 //Fetches images from the internal storage and sets adapter depending upon i.
@@ -199,60 +189,6 @@ public class AllPhotosFragment extends Fragment implements PhotosAdapter.OnImage
             }
         });
     }
-
-
-    //----------------------------   file management   ----------------------------//
-
-                //Support fun for writing uris into the file.
-
-
-//    private void writeToFile(String dirName, String filename, ArrayList<ImageModel> arrayList) {
-//
-//                    //Create a Dir if it doesn't exists
-//
-//        File Dir = new File(requireContext().getExternalFilesDir(null).getAbsolutePath() + "/"+dirName);
-//        if(!Dir.exists()){
-//            boolean y= Dir.mkdirs();
-//            if (y)
-//                Log.d(TAG, "writeToFile: directory creation successful ");
-//            else
-//                Log.d(TAG, "writeToFile: directory creation unsuccessful ");
-//        }
-//
-//                    //Create a new file every time so, no data will be appended and all the data will be overwritten.
-//
-//        File file = new File(requireContext().getExternalFilesDir(null).getAbsolutePath() +"/"+Dir.getName()+"/"+filename);
-//
-//        try {
-//
-//                        //Write arrayList to the file.
-//
-//            FileOutputStream outputStreamWriter = new FileOutputStream(file);
-//            ObjectOutputStream oos = new ObjectOutputStream(outputStreamWriter);
-//            oos.writeObject(arrayList);
-//            oos.close();
-//            outputStreamWriter.close();
-//            Log.d(TAG, "writeToFile: file Write successful ");
-//        } catch (IOException e) {
-//            Log.e(TAG, "Exception : File write failed : " + e.toString());
-//        }
-//    }
-//
-//                //Support fun for reading uris from file.
-//
-//    private ArrayList<ImageModel> readFromFile(String dirName,String filename) {
-//
-//        try {
-//            FileInputStream fis = new FileInputStream(new File(requireContext().getExternalFilesDir(null).getAbsolutePath() +"/"+dirName+"/"+filename));
-//            ObjectInputStream ois = new ObjectInputStream(fis);
-//            // Log.d(TAG, "readFromFile: object "+ object);
-//
-//            return (ArrayList<ImageModel>) ois.readObject();
-//        } catch (Exception ex) {
-//            Log.d(TAG, "readFromFile: exception "+ex.toString());
-//            return null;
-//        }
-//    }
 
     /*====================================================================   INTERFACE METHODS   ====================================================================*/
 
