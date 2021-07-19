@@ -1,0 +1,53 @@
+can be used for reading files....
+
+
+ /*try {
+            InputStream inputStream = getContext().openFileInput("config.txt");
+
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((receiveString = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        } catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;*/
+        
+        
+        
+  private void writeToFile(ArrayList<ImageModel> arrayList, String Filename) {
+        try {
+            FileOutputStream outputStreamWriter = getContext().openFileOutput(Filename, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(outputStreamWriter);
+
+            oos.writeObject(arrayList);
+            oos.close();
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    private Object readFromFile(String Filename) {
+
+        try {
+            FileInputStream fis = getContext().openFileInput(Filename);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            Object object = ois.readObject();
+            return object;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
