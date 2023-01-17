@@ -1,3 +1,8 @@
+=========================================================================
+THE DEVELOPMENT OF THE PROJECT HAS BEEN DISCONTUNED AS OF NOW
+=========================================================================
+
+
 # Photos
 
 This is my personal project.
