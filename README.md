@@ -15,3 +15,5 @@ Pending Optimization.
 - Photos and Videos fetch can be converted to media fetch
 - put the cycles and recycler adapter inside onViewCreate. This can speed up things.
 
+
+THE DEVELOPMENT OF THE PROJECT HAS BEEN DISCONTUNED AS OF NOW
